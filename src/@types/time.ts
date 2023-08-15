@@ -45,20 +45,41 @@ export class OperatingTimeForm {
   }
 }
 
+export class AllYearOperatingTimeForm extends OperatingTimeForm {
+  constructor() {
+    super();
+    this.monday = [new Duration(true)];
+    this.tuesday = [new Duration(true)];
+    this.wednesday = [new Duration(true)];
+    this.thursday = [new Duration(true)];
+    this.friday = [new Duration(true)];
+    this.saturday = [new Duration(true)];
+    this.sunday = [new Duration(true)];
+  }
+}
+
 export class Duration {
   startTime: Time;
   endTime: Time;
-  constructor(startTime?: Time, endTime?: Time) {
-    this.startTime = startTime || new Time();
-    this.endTime = endTime || new Time();
+  constructor(allTime?: boolean) {
+    if (allTime) {
+      this.startTime = new Time(0, 0);
+      this.endTime = new Time(24, 0);
+      return;
+    }
+    this.startTime = new Time();
+    this.endTime = new Time();
   }
 }
 
 export class Time {
-  hour: "" | number;
+  hour: "" | "00" | number;
   minute: "" | "00" | number;
   constructor(hour?: number, minute?: number) {
-    this.hour = hour || "";
-    this.minute = minute || "";
+    if (hour === 0) this.hour = "00";
+    else this.hour = hour || "";
+
+    if (minute === 0) this.minute = "00";
+    else this.minute = minute || "";
   }
 }

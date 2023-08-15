@@ -13,6 +13,7 @@ interface Props {
   operatingTime: OperatingTimeForm;
   setOperatingTime: React.Dispatch<React.SetStateAction<OperatingTimeForm>>;
   durations: Duration[];
+  disabled: boolean;
 }
 
 const DayCell = ({
@@ -20,6 +21,7 @@ const DayCell = ({
   operatingTime,
   setOperatingTime,
   durations,
+  disabled,
 }: Props) => {
   const addDuration = (day: DayOfWeek) => {
     const durations = operatingTime[day];
@@ -50,9 +52,10 @@ const DayCell = ({
           operatingTime={operatingTime}
           setOperatingTime={setOperatingTime}
           addFunction={() => addDuration(day)}
-          removeFunction={removeDuration}
+          removeFunction={() => removeDuration(day, idx)}
           idx={idx}
           duration={duration}
+          disabled={disabled}
         />
       ))}
     </Wrap>

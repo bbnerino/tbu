@@ -6,9 +6,10 @@ interface Props {
   time: Time;
   setTime: React.Dispatch<React.SetStateAction<Time>>;
   idx?: string;
+  disabled: boolean;
 }
 
-const TimeInput = ({ time, setTime, idx }: Props) => {
+const TimeInput = ({ time, setTime, idx, disabled }: Props) => {
   const { hour, minute } = time;
 
   const handleInput =
@@ -36,9 +37,15 @@ const TimeInput = ({ time, setTime, idx }: Props) => {
         id={`${idx}-hour-input`}
         onChange={handleInput("hour")}
         placeholder="hh"
+        disabled={disabled}
       />
       <div className="divide">:</div>
-      <input value={minute} onChange={handleInput("minute")} placeholder="mm" />
+      <input
+        disabled={disabled}
+        value={minute}
+        onChange={handleInput("minute")}
+        placeholder="mm"
+      />
     </Wrap>
   );
 };

@@ -4,7 +4,11 @@ import { useEffect, useState } from "react";
 import Navbar from "../../library/components/nav/Navbar";
 import CheckAll from "../../library/components/input/CheckAll";
 import DayCell from "./components/DayCell";
-import { DayOfWeek, Duration, OperatingTimeForm } from "../../@types/time";
+import {
+  AllYearOperatingTimeForm,
+  DayOfWeek,
+  OperatingTimeForm,
+} from "../../@types/time";
 
 const OperatingTimePage = () => {
   const [checkAllYearRound, setCheckAllYearRound] = useState(false);
@@ -12,6 +16,10 @@ const OperatingTimePage = () => {
     new OperatingTimeForm()
   );
 
+  useEffect(() => {
+    if (checkAllYearRound) setOperatingTime(new AllYearOperatingTimeForm());
+    else setOperatingTime(new OperatingTimeForm());
+  }, [checkAllYearRound]);
   return (
     <BackGroundWrap>
       <Navbar>운영 시간</Navbar>
@@ -26,6 +34,7 @@ const OperatingTimePage = () => {
       <ContentWrap>
         {Object.keys(operatingTime).map((day) => (
           <DayCell
+            disabled={checkAllYearRound}
             key={day}
             day={day as DayOfWeek}
             operatingTime={operatingTime}
