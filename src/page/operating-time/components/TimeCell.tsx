@@ -11,23 +11,23 @@ import TimeInput from "../../../library/components/input/time-input";
 import Icon from "../../../library/components/icon/icon";
 
 interface Props {
-  duration: Duration;
   idx: number;
-  removeFunction?: () => void;
-  addFunction?: () => void;
+  addFunction: () => void;
+  removeFunction: (day: DayOfWeek, index: number) => void;
   day: DayOfWeek;
   operatingTime: OperatingTimeForm;
+  duration: Duration;
   setOperatingTime: React.Dispatch<React.SetStateAction<OperatingTimeForm>>;
 }
 
 const TimeCell = ({
-  duration,
   idx,
   addFunction,
   removeFunction,
   day,
   operatingTime,
   setOperatingTime,
+  duration,
 }: Props) => {
   const [isFocus, setIsFocus] = useState(false);
   const [startTime, setStartTime] = useState<Time>(duration.startTime);
@@ -64,6 +64,11 @@ const TimeCell = ({
     handleOperatingTime();
   }, [startTime, endTime]);
 
+  useEffect(() => {
+    setStartTime(duration.startTime);
+    setEndTime(duration.endTime);
+  }, [duration]);
+
   return (
     <Wrap>
       <TimeCellWrap>
@@ -75,13 +80,13 @@ const TimeCell = ({
           {checkIsAllEmpty() && !isFocus && (
             <Block onClick={handleFocus(idx)}>시간 입력</Block>
           )}
-          <TimeInput time={startTime} idx={day + idx} setTime={setStartTime} />{" "}
+          <TimeInput time={startTime} idx={day + idx} setTime={setStartTime} />
           ~
           <TimeInput time={endTime} setTime={setEndTime} />
         </InputWrap>
 
         <IconWrap>
-          <Icon onClick={removeFunction} color="disabled">
+          <Icon onClick={() => removeFunction(day, idx)} color="disabled">
             <Icon.Delete />
           </Icon>
           <Icon onClick={addFunction} color="disabled">

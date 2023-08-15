@@ -12,26 +12,6 @@ const OperatingTimePage = () => {
     new OperatingTimeForm()
   );
 
-  useEffect(() => {
-    console.log(operatingTime);
-  }, [operatingTime]);
-
-  const addDuration = (day: DayOfWeek) => {
-    const durations = operatingTime[day];
-    setOperatingTime({
-      ...operatingTime,
-      [day]: [...durations, new Duration()],
-    });
-  };
-
-  const removeDuration = (day: DayOfWeek, index: number) => {
-    const durations = operatingTime[day];
-    setOperatingTime({
-      ...operatingTime,
-      [day]: durations.filter((dur, i) => i !== index),
-    });
-  };
-
   return (
     <BackGroundWrap>
       <Navbar>운영 시간</Navbar>
@@ -47,12 +27,10 @@ const OperatingTimePage = () => {
         {Object.keys(operatingTime).map((day) => (
           <DayCell
             key={day}
-            addDuration={addDuration}
-            removeDuration={removeDuration}
-            durations={operatingTime[day as DayOfWeek]}
             day={day as DayOfWeek}
             operatingTime={operatingTime}
             setOperatingTime={setOperatingTime}
+            durations={operatingTime[day as DayOfWeek]}
           />
         ))}
       </ContentWrap>

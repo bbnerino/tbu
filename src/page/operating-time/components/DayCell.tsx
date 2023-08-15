@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import {
   DayOfWeek,
   DaytoKorean,
@@ -9,34 +10,49 @@ import { styled } from "styled-components";
 
 interface Props {
   day: DayOfWeek;
-  durations: Duration[];
-  addDuration: (day: DayOfWeek) => void;
-  removeDuration: (day: DayOfWeek, idx: number) => void;
   operatingTime: OperatingTimeForm;
   setOperatingTime: React.Dispatch<React.SetStateAction<OperatingTimeForm>>;
+  durations: Duration[];
 }
 
 const DayCell = ({
   day,
-  durations,
-  addDuration,
-  removeDuration,
   operatingTime,
   setOperatingTime,
+  durations,
 }: Props) => {
+  const addDuration = (day: DayOfWeek) => {
+    const durations = operatingTime[day];
+    setOperatingTime({
+      ...operatingTime,
+      [day]: [...durations, new Duration()],
+    });
+  };
+
+  const removeDuration = (day: DayOfWeek, index: number) => {
+    let newDurations = operatingTime[day].filter((dur, i) => i !== index);
+    if (newDurations.length === 0) {
+      newDurations = [new Duration()];
+    }
+    setOperatingTime({
+      ...operatingTime,
+      [day]: newDurations,
+    });
+  };
+
   return (
     <Wrap>
       <h1>{DaytoKorean[day]}</h1>
       {durations.map((duration, idx) => (
         <TimeCell
+          key={idx}
           day={day}
           operatingTime={operatingTime}
           setOperatingTime={setOperatingTime}
           addFunction={() => addDuration(day)}
-          removeFunction={() => removeDuration(day, idx)}
-          duration={duration}
-          key={idx}
+          removeFunction={removeDuration}
           idx={idx}
+          duration={duration}
         />
       ))}
     </Wrap>
