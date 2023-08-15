@@ -17,21 +17,19 @@ const OperatingTimePage = () => {
   }, [operatingTime]);
 
   const addDuration = (day: DayOfWeek) => {
-    const findIndex = operatingTime.operatingTimes.findIndex(
-      (t) => t.name === day
-    );
-    const newOperatingTime = { ...operatingTime };
-    newOperatingTime.operatingTimes[findIndex].duration.push(new Duration());
-    setOperatingTime(newOperatingTime);
+    const durations = operatingTime[day];
+    setOperatingTime({
+      ...operatingTime,
+      [day]: [...durations, new Duration()],
+    });
   };
 
   const removeDuration = (day: DayOfWeek, index: number) => {
-    const findIndex = operatingTime.operatingTimes.findIndex(
-      (t) => t.name === day
-    );
-    const newOperatingTime = { ...operatingTime };
-    newOperatingTime.operatingTimes[findIndex].duration.splice(index, 1);
-    setOperatingTime(newOperatingTime);
+    const durations = operatingTime[day];
+    setOperatingTime({
+      ...operatingTime,
+      [day]: durations.filter((dur, i) => i !== index),
+    });
   };
 
   return (
@@ -46,14 +44,15 @@ const OperatingTimePage = () => {
       </AllYearRoundWrap>
 
       <ContentWrap>
-        {operatingTime.operatingTimes.map((day) => (
+        {Object.keys(operatingTime).map((day) => (
           <DayCell
-            operatingTime={operatingTime}
-            setOperatingTime={setOperatingTime}
+            key={day}
             addDuration={addDuration}
             removeDuration={removeDuration}
-            key={day.name}
-            day={day}
+            durations={operatingTime[day as DayOfWeek]}
+            day={day as DayOfWeek}
+            operatingTime={operatingTime}
+            setOperatingTime={setOperatingTime}
           />
         ))}
       </ContentWrap>

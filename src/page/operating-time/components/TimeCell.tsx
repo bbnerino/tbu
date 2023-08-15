@@ -1,22 +1,37 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import COLOR from "../../../library/_constants/colors";
-import { Duration, Time } from "../../../@types/time";
+import {
+  DayOfWeek,
+  Duration,
+  OperatingTimeForm,
+  Time,
+} from "../../../@types/time";
 import TimeInput from "../../../library/components/input/time-input";
 import Icon from "../../../library/components/icon/icon";
 
 interface Props {
   duration: Duration;
-  // setTime?: React.Dispatch<React.SetStateAction<Time>>;
-  idx: string;
+  idx: number;
   removeFunction?: () => void;
   addFunction?: () => void;
+  day: DayOfWeek;
+  operatingTime: OperatingTimeForm;
+  setOperatingTime: React.Dispatch<React.SetStateAction<OperatingTimeForm>>;
 }
 
-const TimeCell = ({ duration, idx, addFunction, removeFunction }: Props) => {
+const TimeCell = ({
+  duration,
+  idx,
+  addFunction,
+  removeFunction,
+  day,
+  operatingTime,
+  setOperatingTime,
+}: Props) => {
   const [isFocus, setIsFocus] = useState(false);
-  const [startTime, setStartTime] = useState<Time>(duration.start);
-  const [endTime, setEndTime] = useState<Time>(duration.end);
+  const [startTime, setStartTime] = useState<Time>(duration.startTime);
+  const [endTime, setEndTime] = useState<Time>(duration.endTime);
   const [error, setError] = useState("");
 
   const checkIsAllEmpty = () => {
@@ -31,10 +46,23 @@ const TimeCell = ({ duration, idx, addFunction, removeFunction }: Props) => {
     return false;
   };
 
-  const handleFocus = (idx: string) => () => {
-    document.getElementById(`${idx}-hour-input`)?.focus();
+  const handleFocus = (idx: number) => () => {
+    document.getElementById(`${day + idx}-hour-input`)?.focus();
     setIsFocus(true);
   };
+
+  const handleOperatingTime = () => {
+    const newOperatingTime = { ...operatingTime };
+    newOperatingTime[day][idx] = {
+      startTime,
+      endTime,
+    };
+    setOperatingTime(newOperatingTime);
+  };
+
+  useEffect(() => {
+    handleOperatingTime();
+  }, [startTime, endTime]);
 
   return (
     <Wrap>
@@ -47,7 +75,8 @@ const TimeCell = ({ duration, idx, addFunction, removeFunction }: Props) => {
           {checkIsAllEmpty() && !isFocus && (
             <Block onClick={handleFocus(idx)}>시간 입력</Block>
           )}
-          <TimeInput time={startTime} idx={idx} setTime={setStartTime} /> ~
+          <TimeInput time={startTime} idx={day + idx} setTime={setStartTime} />{" "}
+          ~
           <TimeInput time={endTime} setTime={setEndTime} />
         </InputWrap>
 

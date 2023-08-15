@@ -1,36 +1,42 @@
 import {
   DayOfWeek,
-  OperatingTime,
+  DaytoKorean,
+  Duration,
   OperatingTimeForm,
 } from "../../../@types/time";
 import TimeCell from "./TimeCell";
 import { styled } from "styled-components";
 
 interface Props {
-  day: OperatingTime;
-  operatingTime: OperatingTimeForm;
-  setOperatingTime: React.Dispatch<React.SetStateAction<OperatingTimeForm>>;
+  day: DayOfWeek;
+  durations: Duration[];
   addDuration: (day: DayOfWeek) => void;
   removeDuration: (day: DayOfWeek, idx: number) => void;
+  operatingTime: OperatingTimeForm;
+  setOperatingTime: React.Dispatch<React.SetStateAction<OperatingTimeForm>>;
 }
 
 const DayCell = ({
   day,
-  operatingTime,
-  setOperatingTime,
+  durations,
   addDuration,
   removeDuration,
+  operatingTime,
+  setOperatingTime,
 }: Props) => {
   return (
     <Wrap>
-      <h1>{day.getKoreanName()}</h1>
-      {day.duration.map((duration, idx) => (
+      <h1>{DaytoKorean[day]}</h1>
+      {durations.map((duration, idx) => (
         <TimeCell
-          addFunction={() => addDuration(day.name)}
-          removeFunction={() => removeDuration(day.name, idx)}
+          day={day}
+          operatingTime={operatingTime}
+          setOperatingTime={setOperatingTime}
+          addFunction={() => addDuration(day)}
+          removeFunction={() => removeDuration(day, idx)}
           duration={duration}
           key={idx}
-          idx={day.name + idx}
+          idx={idx}
         />
       ))}
     </Wrap>
