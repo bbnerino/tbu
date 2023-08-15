@@ -50,7 +50,7 @@ const DayCell = ({
           day={day}
           operatingTime={operatingTime}
           setOperatingTime={setOperatingTime}
-          addFunction={idx === 0 ? () => addDuration(day) : undefined}
+          addFunction={!idx ? () => addDuration(day) : undefined}
           removeFunction={() => removeDuration(day, idx)}
           idx={idx}
           duration={duration}
