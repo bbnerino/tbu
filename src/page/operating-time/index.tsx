@@ -2,8 +2,8 @@ import { styled } from "styled-components";
 import TimeInput from "./components/TimeCell";
 import COLOR from "../../library/_constants/colors";
 import { useState } from "react";
-import AllYearRound from "./components/CheckAll";
 import Navbar from "../../library/components/nav/Navbar";
+import CheckAll from "../../library/components/input/CheckAll";
 
 const OperatingTimePage = () => {
   const [checkAllYearRound, setCheckAllYearRound] = useState(false);
@@ -11,7 +11,7 @@ const OperatingTimePage = () => {
     <BackGroundWrap>
       <Navbar>운영 시간</Navbar>
       <AllYearRoundWrap>
-        <AllYearRound
+        <CheckAll
           title="연중무휴"
           state={checkAllYearRound}
           setState={setCheckAllYearRound}

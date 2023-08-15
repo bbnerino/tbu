@@ -6,3 +6,17 @@ export class Time {
     this.minute = minute || "";
   }
 }
+
+export interface Duration {
+  start: string;
+  end: string;
+}
+
+export type DayOfWeek =
+  | "Monday"
+  | "Tuesday"
+  | "Wednesday"
+  | "Thursday"
+  | "Friday"
+  | "Saturday"
+  | "Sunday";

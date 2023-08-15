@@ -1,7 +1,7 @@
 import React from "react";
-import Icon from "../../../library/components/icon/icon";
+import Icon from "../icon/icon";
 import { styled } from "styled-components";
-import COLOR from "../../../library/_constants/colors";
+import COLOR from "../../_constants/colors";
 
 interface Props {
   title: string;
