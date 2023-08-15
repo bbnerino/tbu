@@ -12,7 +12,7 @@ import Icon from "../../../library/components/icon/icon";
 
 interface Props {
   idx: number;
-  addFunction: () => void;
+  addFunction?: () => void;
   removeFunction: () => void;
   day: DayOfWeek;
   operatingTime: OperatingTimeForm;
@@ -97,9 +97,11 @@ const TimeCell = ({
           <Icon onClick={disabled ? () => {} : removeFunction} color="disabled">
             <Icon.Delete />
           </Icon>
-          <Icon onClick={disabled ? () => {} : addFunction} color="disabled">
-            <Icon.Plus />
-          </Icon>
+          {addFunction && (
+            <Icon onClick={disabled ? () => {} : addFunction} color="disabled">
+              <Icon.Plus />
+            </Icon>
+          )}
         </IconWrap>
       </TimeCellWrap>
 

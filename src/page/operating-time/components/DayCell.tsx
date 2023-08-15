@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import {
   DayOfWeek,
   DaytoKorean,
@@ -51,7 +50,7 @@ const DayCell = ({
           day={day}
           operatingTime={operatingTime}
           setOperatingTime={setOperatingTime}
-          addFunction={() => addDuration(day)}
+          addFunction={idx === 0 ? () => addDuration(day) : undefined}
           removeFunction={() => removeDuration(day, idx)}
           idx={idx}
           duration={duration}
