@@ -8,12 +8,12 @@ import Icon from "../../../library/components/icon/icon";
 interface Props {
   time?: Time;
   setTime?: React.Dispatch<React.SetStateAction<Time>>;
-  idx?: number;
+  idx: string;
   deleteTime?: () => void;
   addTime?: () => void;
 }
 
-const TimeCell = ({ time, setTime, idx = 1 }: Props) => {
+const TimeCell = ({ time, setTime, idx }: Props) => {
   const [isFocus, setIsFocus] = useState(false);
   const [startTime, setStartTime] = useState<Time>(new Time());
   const [endTime, setEndTime] = useState<Time>(new Time());
@@ -31,7 +31,7 @@ const TimeCell = ({ time, setTime, idx = 1 }: Props) => {
     return false;
   };
 
-  const handleFocus = (idx: number) => () => {
+  const handleFocus = (idx: string) => () => {
     document.getElementById(`${idx}-hour-input`)?.focus();
     setIsFocus(true);
   };

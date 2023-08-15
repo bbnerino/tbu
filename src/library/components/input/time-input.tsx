@@ -5,7 +5,7 @@ import { Time } from "../../../@types/time";
 interface Props {
   time: Time;
   setTime: React.Dispatch<React.SetStateAction<Time>>;
-  idx?: number;
+  idx?: string;
 }
 
 const TimeInput = ({ time, setTime, idx }: Props) => {

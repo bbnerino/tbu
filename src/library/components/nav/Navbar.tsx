@@ -10,7 +10,6 @@ const Navbar = ({ children }: Props) => {
 };
 
 const Wrap = styled.header`
-  width: 100%;
   height: 60px;
   background-color: ${COLOR.navy};
   color: ${COLOR.white};

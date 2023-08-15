@@ -1,26 +1,29 @@
-import { DayOfWeek, Duration } from "./time";
+import { DayOfWeek, DaytoKorean, Duration } from "./time";
 
 export class OperatingTimeForm {
   operatingTime: OperatingTime[];
   constructor() {
     this.operatingTime = [
-      new OperatingTime("Monday"),
-      new OperatingTime("Tuesday"),
-      new OperatingTime("Wednesday"),
-      new OperatingTime("Thursday"),
-      new OperatingTime("Friday"),
-      new OperatingTime("Saturday"),
-      new OperatingTime("Sunday"),
+      new OperatingTime("monday"),
+      new OperatingTime("tuesday"),
+      new OperatingTime("wednesday"),
+      new OperatingTime("thursday"),
+      new OperatingTime("friday"),
+      new OperatingTime("saturday"),
+      new OperatingTime("sunday"),
     ];
   }
 }
 
 export class OperatingTime {
-  day: DayOfWeek;
+  name: DayOfWeek;
   duration: Duration[];
-  constructor(day: DayOfWeek) {
-    this.day = day;
-    this.duration = [];
+  constructor(name: DayOfWeek) {
+    this.name = name;
+    this.duration = [new Duration("", "")];
+  }
+  toKorean() {
+    return DaytoKorean[this.name];
   }
 }
 

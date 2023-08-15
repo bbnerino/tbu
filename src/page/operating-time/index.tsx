@@ -1,12 +1,14 @@
 import { styled } from "styled-components";
-import TimeInput from "./components/TimeCell";
 import COLOR from "../../library/_constants/colors";
 import { useState } from "react";
 import Navbar from "../../library/components/nav/Navbar";
 import CheckAll from "../../library/components/input/CheckAll";
+import { OperatingTimeForm } from "../../@types/operating-time";
+import DayCell from "./components/DayCell";
 
 const OperatingTimePage = () => {
   const [checkAllYearRound, setCheckAllYearRound] = useState(false);
+  const [days, setDays] = useState(new OperatingTimeForm().operatingTime);
   return (
     <BackGroundWrap>
       <Navbar>운영 시간</Navbar>
@@ -19,7 +21,9 @@ const OperatingTimePage = () => {
       </AllYearRoundWrap>
 
       <ContentWrap>
-        <TimeInput />
+        {days.map((day) => (
+          <DayCell key={day.name} day={day} />
+        ))}
       </ContentWrap>
     </BackGroundWrap>
   );
@@ -33,6 +37,8 @@ const ContentWrap = styled.article`
   min-height: 50vh;
   padding: 0 20px;
   background-color: ${COLOR.white};
+  display: flex;
+  flex-wrap: wrap;
 `;
 const AllYearRoundWrap = styled.div`
   padding: 24px;
