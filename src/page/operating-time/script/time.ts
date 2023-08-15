@@ -4,16 +4,30 @@ export const OperationTime = {
   checkIsCorrectTime: (start: Time, end: Time) => {
     return toMinute(start) < toMinute(end);
   },
-  checkIsOverTime: (durations: Duration[], idx: number, start: Time) => {
+  checkIsOverTime: (
+    durations: Duration[],
+    idx: number,
+    start: Time,
+    end: Time
+  ) => {
     const startMinute = toMinute(start);
+    const endMinute = toMinute(end);
 
     return durations.every((duration, index) => {
       if (index === idx) return true;
-      return startMinute >= toMinute(duration.endTime);
+      return !(
+        (toMinute(duration.startTime) <= startMinute &&
+          startMinute <= toMinute(duration.endTime)) ||
+        (toMinute(duration.startTime) <= endMinute &&
+          endMinute <= toMinute(duration.endTime))
+      );
     });
-    
   },
-  시간정렬: () => {},
+  sortOperatingTime: (durations: Duration[]) => {
+    return durations.sort((a, b) => {
+      return toMinute(a.startTime) - toMinute(b.startTime);
+    });
+  },
 };
 const toMinute = (time: Time) => {
   return toInt(time.hour) * 60 + toInt(time.minute);

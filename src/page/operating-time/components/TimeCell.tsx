@@ -60,6 +60,10 @@ const TimeCell = ({
       startTime,
       endTime,
     };
+    newOperatingTime[day] = OperationTime.sortOperatingTime(
+      newOperatingTime[day]
+    );
+
     setOperatingTime(newOperatingTime);
   };
 
@@ -70,8 +74,15 @@ const TimeCell = ({
       return setError("올바른 시간을 입력해주세요.");
     }
 
-    if (!OperationTime.checkIsOverTime(operatingTime[day], idx, startTime)) {
-      return setError("이미 입력된 시간을 초과하였습니다.");
+    if (
+      !OperationTime.checkIsOverTime(
+        operatingTime[day],
+        idx,
+        startTime,
+        endTime
+      )
+    ) {
+      return setError("겹치는 시간이 존재합니다.");
     }
 
     handleOperatingTime();
