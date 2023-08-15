@@ -24,9 +24,25 @@ export const OperationTime = {
     });
   },
   sortOperatingTime: (durations: Duration[]) => {
-    return durations.sort((a, b) => {
-      return toMinute(a.startTime) - toMinute(b.startTime);
-    });
+    const sortedDurations = [...durations];
+
+    for (let i = 0; i < sortedDurations.length - 1; i++) {
+      for (let j = i + 1; j < sortedDurations.length; j++) {
+        if (
+          !toMinute(sortedDurations[i].startTime) ||
+          !toMinute(sortedDurations[j].startTime)
+        ) {
+        }
+        if (
+          toMinute(sortedDurations[i].startTime) >
+          toMinute(sortedDurations[j].startTime)
+        ) {
+          sortedDurations.move(i, j);
+        }
+      }
+    }
+
+    return sortedDurations;
   },
 };
 const toMinute = (time: Time) => {
