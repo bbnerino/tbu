@@ -12,7 +12,7 @@ interface IconProps extends ButtonHTMLAttributes<HTMLElement> {
 
 const Icon = ({ size = "md", color = "neutrals", ...props }: IconProps) => {
   return (
-    <Wrapper size={SIZE_VARIANTS[size]}>
+    <Wrapper {...props} size={SIZE_VARIANTS[size]}>
       <svg xmlns={ICON_URL} fill={COLOR[color]}>
         {props.children}
       </svg>
@@ -32,6 +32,7 @@ const Wrapper = styled.div<StyledProps>`
   svg {
     ${({ size }) => size}
   }
+  display: flex;
 `;
 
 Icon.Delete = () => (

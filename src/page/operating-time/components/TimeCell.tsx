@@ -1,9 +1,9 @@
 import { useState } from "react";
 import styled from "styled-components";
-import COLOR from "../_constants/colors";
-import { Time } from "../../@types/time";
-import TimeInput from "../atom/input/time-input";
-import Icon from "../atom/icon/icon";
+import COLOR from "../../../library/_constants/colors";
+import { Time } from "../../../@types/time";
+import TimeInput from "../../../library/atom/input/time-input";
+import Icon from "../../../library/atom/icon/icon";
 
 interface Props {
   time?: Time;

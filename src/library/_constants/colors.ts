@@ -7,6 +7,9 @@ const COLOR = {
   main: "#fff",
   border: "#dfe0e5",
   textLight: "#9899A1",
+  background: "#E7E7EB",
+  white: "#fff",
+  light: "#C8C9D4",
 };
 
 export type ColorType = keyof typeof COLOR;
