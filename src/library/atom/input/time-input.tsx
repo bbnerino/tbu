@@ -48,7 +48,7 @@ const Wrap = styled.div`
   input {
     width: 25px;
     border: none;
-    padding-left: 5px;
+    padding-left: 10px;
     background: none;
     &:focus {
       outline: none;

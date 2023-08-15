@@ -83,16 +83,17 @@ const TimeCellWrap = styled.div`
   width: 270px;
   padding: 10px;
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+  background-color: ${COLOR.main};
 `;
 
 const InputWrap = styled.div`
-  width: 160px;
+  width: 190px;
   height: 25px;
   display: flex;
   align-items: center;
-  padding: 9px 12px;
+  padding: 9px 3px;
   border-radius: 5px;
-  border: 1px solid ${COLOR.neutrals};
+  border: 1px solid ${COLOR.border};
   &.focus {
     border: 1px solid ${COLOR.primary};
   }
