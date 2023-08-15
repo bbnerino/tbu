@@ -9,6 +9,7 @@ import {
 } from "../../../@types/time";
 import TimeInput from "../../../library/components/input/time-input";
 import Icon from "../../../library/components/icon/icon";
+import { OperationTime } from "../script/time";
 
 interface Props {
   idx: number;
@@ -62,7 +63,20 @@ const TimeCell = ({
     setOperatingTime(newOperatingTime);
   };
 
-  useEffect(() => handleOperatingTime(), [startTime, endTime]);
+  useEffect(() => {
+    if (checkIsAllEmpty()) return setError("");
+
+    if (!OperationTime.checkIsCorrectTime(startTime, endTime)) {
+      return setError("올바른 시간을 입력해주세요.");
+    }
+
+    if (!OperationTime.checkIsOverTime(operatingTime[day], idx, startTime)) {
+      return setError("이미 입력된 시간을 초과하였습니다.");
+    }
+
+    handleOperatingTime();
+    setError("");
+  }, [startTime, endTime]);
 
   useEffect(() => {
     setStartTime(duration.startTime);
@@ -78,6 +92,9 @@ const TimeCell = ({
           className={isFocus ? "focus" : ""}
           style={{
             backgroundColor: disabled ? COLOR.disabledBackground : COLOR.main,
+            border: error
+              ? `1px solid ${COLOR.incorrect}`
+              : `1px solid ${COLOR.border}`,
           }}
         >
           {checkIsAllEmpty() && !isFocus && (
@@ -94,11 +111,14 @@ const TimeCell = ({
         </InputWrap>
 
         <IconWrap>
-          <Icon onClick={disabled ? () => {} : removeFunction} color="disabled">
+          <Icon
+            onClick={disabled ? undefined : removeFunction}
+            color="disabled"
+          >
             <Icon.Delete />
           </Icon>
           {addFunction && (
-            <Icon onClick={disabled ? () => {} : addFunction} color="disabled">
+            <Icon onClick={disabled ? undefined : addFunction} color="disabled">
               <Icon.Plus />
             </Icon>
           )}

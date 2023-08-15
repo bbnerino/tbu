@@ -21,7 +21,10 @@ const TimeInput = ({ time, setTime, idx, disabled }: Props) => {
       if (type === "hour") {
         if (timeNum === 0) return setTime({ ...time, hour: 0 });
         if (timeNum > 23) return setTime({ ...time, hour: 23 });
-        setTime({ ...time, hour: timeNum || "" });
+        if (timeNum && time.minute === "") {
+          return setTime({ hour: timeNum, minute: "00" });
+        }
+        return setTime({ ...time, hour: timeNum || "" });
       }
       if (type === "minute") {
         if (timeNum === 0) return setTime({ ...time, minute: 0 });
