@@ -10,6 +10,7 @@ const COLOR = {
   background: "#E7E7EB",
   white: "#fff",
   light: "#C8C9D4",
+  navy: "#142F62",
 };
 
 export type ColorType = keyof typeof COLOR;

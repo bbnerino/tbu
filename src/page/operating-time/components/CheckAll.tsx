@@ -1,5 +1,5 @@
 import React from "react";
-import Icon from "../../../library/atom/icon/icon";
+import Icon from "../../../library/components/icon/icon";
 import { styled } from "styled-components";
 import COLOR from "../../../library/_constants/colors";
 

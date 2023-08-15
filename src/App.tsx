@@ -3,7 +3,7 @@ import OperatingTimePage from "./page/operating-time/index";
 function App() {
   return (
     <div className="App">
-      <OperatingTimePage/>
+      <OperatingTimePage />
     </div>
   );
 }

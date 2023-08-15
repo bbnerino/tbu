@@ -3,11 +3,13 @@ import TimeInput from "./components/TimeCell";
 import COLOR from "../../library/_constants/colors";
 import { useState } from "react";
 import AllYearRound from "./components/CheckAll";
+import Navbar from "../../library/components/nav/Navbar";
 
 const OperatingTimePage = () => {
   const [checkAllYearRound, setCheckAllYearRound] = useState(false);
   return (
     <BackGroundWrap>
+      <Navbar>운영 시간</Navbar>
       <AllYearRoundWrap>
         <AllYearRound
           title="연중무휴"
