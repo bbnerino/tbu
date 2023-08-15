@@ -9,11 +9,11 @@ interface Props {
   duration: Duration;
   // setTime?: React.Dispatch<React.SetStateAction<Time>>;
   idx: string;
-  deleteTime?: () => void;
-  addTime?: () => void;
+  removeFunction?: () => void;
+  addFunction?: () => void;
 }
 
-const TimeCell = ({ duration, idx }: Props) => {
+const TimeCell = ({ duration, idx, addFunction, removeFunction }: Props) => {
   const [isFocus, setIsFocus] = useState(false);
   const [startTime, setStartTime] = useState<Time>(duration.start);
   const [endTime, setEndTime] = useState<Time>(duration.end);
@@ -52,10 +52,10 @@ const TimeCell = ({ duration, idx }: Props) => {
         </InputWrap>
 
         <IconWrap>
-          <Icon color="disabled">
+          <Icon onClick={removeFunction} color="disabled">
             <Icon.Delete />
           </Icon>
-          <Icon color="disabled">
+          <Icon onClick={addFunction} color="disabled">
             <Icon.Plus />
           </Icon>
         </IconWrap>

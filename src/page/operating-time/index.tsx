@@ -1,14 +1,39 @@
 import { styled } from "styled-components";
 import COLOR from "../../library/_constants/colors";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "../../library/components/nav/Navbar";
 import CheckAll from "../../library/components/input/CheckAll";
 import DayCell from "./components/DayCell";
-import { OperatingTimeForm } from "../../@types/time";
+import { DayOfWeek, Duration, OperatingTimeForm } from "../../@types/time";
 
 const OperatingTimePage = () => {
   const [checkAllYearRound, setCheckAllYearRound] = useState(false);
-  const [days, setDays] = useState(new OperatingTimeForm().operatingTimes);
+  const [operatingTime, setOperatingTime] = useState<OperatingTimeForm>(
+    new OperatingTimeForm()
+  );
+
+  useEffect(() => {
+    console.log(operatingTime);
+  }, [operatingTime]);
+
+  const addDuration = (day: DayOfWeek) => {
+    const findIndex = operatingTime.operatingTimes.findIndex(
+      (t) => t.name === day
+    );
+    const newOperatingTime = { ...operatingTime };
+    newOperatingTime.operatingTimes[findIndex].duration.push(new Duration());
+    setOperatingTime(newOperatingTime);
+  };
+
+  const removeDuration = (day: DayOfWeek, index: number) => {
+    const findIndex = operatingTime.operatingTimes.findIndex(
+      (t) => t.name === day
+    );
+    const newOperatingTime = { ...operatingTime };
+    newOperatingTime.operatingTimes[findIndex].duration.splice(index, 1);
+    setOperatingTime(newOperatingTime);
+  };
+
   return (
     <BackGroundWrap>
       <Navbar>운영 시간</Navbar>
@@ -21,8 +46,15 @@ const OperatingTimePage = () => {
       </AllYearRoundWrap>
 
       <ContentWrap>
-        {days.map((day) => (
-          <DayCell key={day.name} day={day} />
+        {operatingTime.operatingTimes.map((day) => (
+          <DayCell
+            operatingTime={operatingTime}
+            setOperatingTime={setOperatingTime}
+            addDuration={addDuration}
+            removeDuration={removeDuration}
+            key={day.name}
+            day={day}
+          />
         ))}
       </ContentWrap>
     </BackGroundWrap>
