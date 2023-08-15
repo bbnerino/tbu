@@ -28,8 +28,10 @@ interface StyledProps {
 }
 
 const Wrapper = styled.div<StyledProps>`
-  ${({ size }) => size}
   cursor: pointer;
+  svg {
+    ${({ size }) => size}
+  }
 `;
 
 Icon.Delete = () => (
