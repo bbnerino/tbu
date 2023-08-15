@@ -1,5 +1,4 @@
-import React, { useEffect } from "react";
-import { OperatingTime } from "../../../@types/operating-time";
+import { OperatingTime } from "../../../@types/time";
 import TimeCell from "./TimeCell";
 import { styled } from "styled-components";
 
@@ -10,9 +9,9 @@ interface Props {
 const DayCell = ({ day }: Props) => {
   return (
     <Wrap>
-      <h1>{day.name}</h1>
+      <h1>{day.getKoreanName()}</h1>
       {day.duration.map((duration, idx) => (
-        <TimeCell key={idx} idx={day.name + idx} />
+        <TimeCell duration={duration} key={idx} idx={day.name + idx} />
       ))}
     </Wrap>
   );

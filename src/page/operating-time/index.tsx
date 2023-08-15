@@ -3,12 +3,12 @@ import COLOR from "../../library/_constants/colors";
 import { useState } from "react";
 import Navbar from "../../library/components/nav/Navbar";
 import CheckAll from "../../library/components/input/CheckAll";
-import { OperatingTimeForm } from "../../@types/operating-time";
 import DayCell from "./components/DayCell";
+import { OperatingTimeForm } from "../../@types/time";
 
 const OperatingTimePage = () => {
   const [checkAllYearRound, setCheckAllYearRound] = useState(false);
-  const [days, setDays] = useState(new OperatingTimeForm().operatingTime);
+  const [days, setDays] = useState(new OperatingTimeForm().operatingTimes);
   return (
     <BackGroundWrap>
       <Navbar>운영 시간</Navbar>

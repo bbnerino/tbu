@@ -1,22 +1,22 @@
 import { useState } from "react";
 import styled from "styled-components";
 import COLOR from "../../../library/_constants/colors";
-import { Time } from "../../../@types/time";
+import { Duration, Time } from "../../../@types/time";
 import TimeInput from "../../../library/components/input/time-input";
 import Icon from "../../../library/components/icon/icon";
 
 interface Props {
-  time?: Time;
-  setTime?: React.Dispatch<React.SetStateAction<Time>>;
+  duration: Duration;
+  // setTime?: React.Dispatch<React.SetStateAction<Time>>;
   idx: string;
   deleteTime?: () => void;
   addTime?: () => void;
 }
 
-const TimeCell = ({ time, setTime, idx }: Props) => {
+const TimeCell = ({ duration, idx }: Props) => {
   const [isFocus, setIsFocus] = useState(false);
-  const [startTime, setStartTime] = useState<Time>(new Time());
-  const [endTime, setEndTime] = useState<Time>(new Time());
+  const [startTime, setStartTime] = useState<Time>(duration.start);
+  const [endTime, setEndTime] = useState<Time>(duration.end);
   const [error, setError] = useState("");
 
   const checkIsAllEmpty = () => {

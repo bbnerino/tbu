@@ -1,20 +1,63 @@
+// const data = {
+//   operatingTimes: [
+//     {
+//       name: "monday",
+//       duration: [
+//         {
+//           start: { hour: 9, minute: 0},
+//           end:   { hour: 18, minute: 0 },
+//         },
+//       ]
+//     }
+//   ]
+// };
+
+export class OperatingTimeForm {
+  operatingTimes: OperatingTime[];
+  constructor() {
+    this.operatingTimes = [
+      new OperatingTime("monday"),
+      new OperatingTime("tuesday"),
+      new OperatingTime("wednesday"),
+      new OperatingTime("thursday"),
+      new OperatingTime("friday"),
+      new OperatingTime("saturday"),
+      new OperatingTime("sunday"),
+    ];
+  }
+}
+
+export class OperatingTime {
+  name: DayOfWeek;
+  duration: Duration[];
+  constructor(name: DayOfWeek) {
+    this.name = name;
+    this.duration = [new Duration()];
+  }
+  getKoreanName() {
+    return DaytoKorean[this.name];
+  }
+}
+
+export class Duration {
+  start: Time;
+  end: Time;
+  constructor(start?: Time, end?: Time) {
+    this.start = start || new Time();
+    this.end = end || new Time();
+  }
+}
+
 export class Time {
   hour: "" | number;
-  minute: "" | number;
+  minute: "" | "00" | number;
   constructor(hour?: number, minute?: number) {
     this.hour = hour || "";
     this.minute = minute || "";
   }
 }
 
-export class Duration {
-  start: string;
-  end: string;
-  constructor(start?: string, end?: string) {
-    this.start = start || "";
-    this.end = end || "";
-  }
-}
+// DATA
 export enum DaytoKorean {
   monday = "월",
   tuesday = "화",
