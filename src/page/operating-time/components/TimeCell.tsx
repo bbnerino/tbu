@@ -76,6 +76,9 @@ const TimeCell = ({
           onFocus={() => setIsFocus(true)}
           onBlur={() => setIsFocus(false)}
           className={isFocus ? "focus" : ""}
+          style={{
+            backgroundColor: disabled ? COLOR.disabledBackground : COLOR.main,
+          }}
         >
           {checkIsAllEmpty() && !isFocus && (
             <Block onClick={handleFocus(idx)}>시간 입력</Block>
@@ -110,6 +113,19 @@ const Wrap = styled.div`
   flex-direction: column;
   margin-bottom: 10px;
 `;
+const InputWrap = styled.div`
+  width: 190px;
+  height: 25px;
+  display: flex;
+  align-items: center;
+  padding: 9px 3px;
+  border-radius: 5px;
+  border: 1px solid ${COLOR.border};
+  &.focus {
+    border: 1px solid ${COLOR.primary};
+  }
+  position: relative;
+`;
 const Message = styled.div`
   color: ${COLOR.incorrect};
   font-size: 12px;
@@ -125,19 +141,6 @@ const TimeCellWrap = styled.div`
   background-color: ${COLOR.main};
 `;
 
-const InputWrap = styled.div`
-  width: 190px;
-  height: 25px;
-  display: flex;
-  align-items: center;
-  padding: 9px 3px;
-  border-radius: 5px;
-  border: 1px solid ${COLOR.border};
-  &.focus {
-    border: 1px solid ${COLOR.primary};
-  }
-  position: relative;
-`;
 const IconWrap = styled.div`
   display: flex;
   align-items: center;
