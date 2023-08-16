@@ -6,7 +6,7 @@ interface Props {
   children?: React.ReactNode;
 }
 const Navbar = ({ children }: Props) => {
-  return <Wrap>{children}</Wrap>;
+  return <Wrap data-testid="header-nav">{children}</Wrap>;
 };
 
 const Wrap = styled.header`

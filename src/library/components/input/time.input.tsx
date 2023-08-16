@@ -5,7 +5,7 @@ import { Time } from "../../../@types/time";
 interface Props {
   time: Time;
   setTime: React.Dispatch<React.SetStateAction<Time>>;
-  identify?: string;
+  identify: string;
   disabled: boolean;
 }
 
@@ -48,7 +48,8 @@ const TimeInput = ({ time, setTime, identify, disabled }: Props) => {
         onChange={handleHourInput()}
         placeholder="hh"
         disabled={disabled}
-        id={`${identify || ""}-hour-input`}
+        id={`${identify}-hour-input`}
+        data-testid={`${identify}-hour-input`}
       />
       <span>:</span>
       <input
@@ -56,6 +57,8 @@ const TimeInput = ({ time, setTime, identify, disabled }: Props) => {
         onChange={handleMinuteInput()}
         placeholder="mm"
         disabled={disabled}
+        id={`${identify}-minute-input`}
+        data-testid={`${identify}-minute-input`}
       />
     </Wrap>
   );

@@ -31,7 +31,7 @@ const TimeCell = ({ idx, day, duration, disabled, timeService }: Props) => {
     timeService.checkIsEmpty(startTime) && timeService.checkIsEmpty(endTime);
 
   const handleFocus = (idx: number) => () => {
-    document.getElementById(`${day + idx}-hour-input`)?.focus();
+    document.getElementById(`${day}-${idx}-start-hour-input`)?.focus();
     setIsFocus(true);
   };
   useEffect(() => {
@@ -77,16 +77,26 @@ const TimeCell = ({ idx, day, duration, disabled, timeService }: Props) => {
           style={inputStyle}
         >
           {checkIsAllEmpty() && !isFocus && (
-            <InputBlock onClick={handleFocus(idx)}>시간 입력</InputBlock>
+            <InputBlock
+              data-testid="insert-time-input"
+              onClick={handleFocus(idx)}
+            >
+              시간 입력
+            </InputBlock>
           )}
           <TimeInput
             disabled={disabled}
-            identify={day + idx}
+            identify={`${day}-${idx}-start`}
             time={startTime}
             setTime={setStartTime}
           />
           ~
-          <TimeInput disabled={disabled} time={endTime} setTime={setEndTime} />
+          <TimeInput
+            disabled={disabled}
+            identify={`${day}-${idx}-end`}
+            time={endTime}
+            setTime={setEndTime}
+          />
         </InputWrap>
 
         <IconWrap>
@@ -95,6 +105,7 @@ const TimeCell = ({ idx, day, duration, disabled, timeService }: Props) => {
               disabled ? undefined : () => timeService.removeDuration(day, idx)
             }
             color="disabled"
+            data-testid={`${day}-${idx}-delete-icon`}
           />
           {idx === 0 && (
             <Icon.Plus
@@ -102,6 +113,7 @@ const TimeCell = ({ idx, day, duration, disabled, timeService }: Props) => {
                 disabled ? undefined : () => timeService.addDuration(day)
               }
               color="disabled"
+              data-testid={`${day}-${idx}-plus-icon`}
             />
           )}
         </IconWrap>
