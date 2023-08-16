@@ -1,20 +1,22 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import COLOR from "../../../library/_constants/colors";
-import { Duration, Time, TimeService } from "../../../@types/time";
-import TimeInput from "../../../library/components/input/time-input";
+import { Duration, Time } from "../../../@types/time";
+import TimeInput from "../../../library/components/input/time.input";
 import Icon from "../../../library/components/icon/icon";
 import { DayOfWeek } from "../../../@types/day";
+import { TimeServiceType } from "../../../@types/time.service";
+import ErrorMessage from "../../../library/components/message/error.message";
 
 interface Props {
   idx: number;
   addFunction?: () => void;
   removeFunction: () => void;
   day: DayOfWeek;
-  durations: Duration[];
   duration: Duration;
   disabled: boolean;
-  handleOperatingTime: (idx: number, startTime: Time, endTime: Time) => void;
+  handleOperatingTime: (day: DayOfWeek, idx: number) => void;
+  timeService: TimeServiceType;
 }
 
 const TimeCell = ({
@@ -22,10 +24,10 @@ const TimeCell = ({
   addFunction,
   removeFunction,
   day,
-  durations,
   duration,
   disabled,
   handleOperatingTime,
+  timeService,
 }: Props) => {
   const [isFocus, setIsFocus] = useState(false);
   const [startTime, setStartTime] = useState<Time>(duration.startTime);
@@ -38,7 +40,7 @@ const TimeCell = ({
   }, [duration]);
 
   const checkIsAllEmpty = () =>
-    TimeService.checkIsEmpty(startTime) && TimeService.checkIsEmpty(endTime);
+    timeService.checkIsEmpty(startTime) && timeService.checkIsEmpty(endTime);
 
   const handleFocus = (idx: number) => () => {
     document.getElementById(`${day + idx}-hour-input`)?.focus();
@@ -49,29 +51,35 @@ const TimeCell = ({
     // 모두 빈칸일 때 에러 메시지 제거 후 종료
     if (checkIsAllEmpty()) return setError("");
 
+    handleOperatingTime(day, idx);
+
+    if (!timeService.checkIsSomeEmpty(startTime, endTime)) {
+      return setError("범위를 모두 입력해주세요.");
+    }
+
     // 시작 시간이 끝 시간보다 늦을 때 에러 메시지 출력 후 종료
-    if (!TimeService.checkIsCorrectTime(startTime, endTime)) {
-      return setError("올바른 시간을 입력해주세요.");
+    if (!timeService.checkIsCorrectTime(startTime, endTime)) {
+      return setError("시간을 확인해주세요.");
     }
 
     // 겹치는 시간이 존재할 때 에러 메시지 출력 후 종료
-    if (!TimeService.checkIsOverTime(durations, idx, startTime, endTime)) {
+    if (!timeService.checkIsOverTime(day, idx, startTime, endTime)) {
       return setError("겹치는 시간이 존재합니다.");
     }
 
-    handleOperatingTime(idx, startTime, endTime);
     setError("");
   }, [startTime, endTime]);
 
-  const inputStyle = {
-    backgroundColor: disabled ? COLOR.disabledBackground : COLOR.main,
-    border: isFocus
-      ? `1px solid ${COLOR.primary}`
-      : error
-      ? `1px solid ${COLOR.incorrect}`
-      : `1px solid ${COLOR.border}`,
-  };
-
+  const inputStyle = useMemo(() => {
+    return {
+      backgroundColor: disabled ? COLOR.disabledBackground : COLOR.main,
+      border: isFocus
+        ? `1px solid ${COLOR.primary}`
+        : error
+        ? `1px solid ${COLOR.incorrect}`
+        : `1px solid ${COLOR.border}`,
+    };
+  }, [disabled, isFocus, error]);
   return (
     <Wrap>
       <TimeCellWrap>
@@ -107,7 +115,7 @@ const TimeCell = ({
         </IconWrap>
       </TimeCellWrap>
 
-      <Message>{error}</Message>
+      <ErrorMessage>{error}</ErrorMessage>
     </Wrap>
   );
 };
@@ -116,6 +124,7 @@ const Wrap = styled.div`
   display: flex;
   flex-direction: column;
   margin-bottom: 10px;
+  height: 90px;
 `;
 const InputWrap = styled.div`
   width: 190px;
@@ -125,11 +134,6 @@ const InputWrap = styled.div`
   padding: 9px 3px;
   border-radius: 5px;
   position: relative;
-`;
-const Message = styled.div`
-  color: ${COLOR.incorrect};
-  font-size: 12px;
-  margin: 5px;
 `;
 
 const TimeCellWrap = styled.div`
