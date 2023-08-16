@@ -12,8 +12,7 @@ interface Props {
 const TimeInput = ({ time, setTime, identify, disabled }: Props) => {
   const { hour, minute } = time;
 
-  const handleHourInput = () => (e: React.ChangeEvent<HTMLInputElement>) => {
-    const inputValue = e.target.value;
+  const setHour = (inputValue: string) => {
     if (inputValue === "" || inputValue === "00") {
       return setTime({ ...time, hour: inputValue });
     }
@@ -25,15 +24,21 @@ const TimeInput = ({ time, setTime, identify, disabled }: Props) => {
 
     if (time.minute === "") setTime({ hour: timeNum, minute: "00" });
   };
-
-  const handleMinuteInput = () => (e: React.ChangeEvent<HTMLInputElement>) => {
-    const inputValue = e.target.value;
+  const setMinute = (inputValue: string) => {
     if (inputValue === "" || inputValue === "00") {
       return setTime({ ...time, minute: inputValue });
     }
     const timeNum = Number(inputValue);
     if (isNaN(timeNum)) return;
     setTime({ ...time, minute: Math.min(Math.max(timeNum, 0), 59) });
+  };
+
+  const handleHourInput = () => (e: React.ChangeEvent<HTMLInputElement>) => {
+    setHour(e.target.value);
+  };
+
+  const handleMinuteInput = () => (e: React.ChangeEvent<HTMLInputElement>) => {
+    setMinute(e.target.value);
   };
 
   return (
