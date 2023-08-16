@@ -1,18 +1,17 @@
-import {
-  DayOfWeek,
-  DaytoKorean,
-  Duration,
-  OperatingTimeForm,
-} from "../../../@types/time";
+import { DayOfWeek, DaytoKorean } from "../../../@types/day";
+import { OperatingTime } from "../../../@types/operating-time";
+import { Duration, Time, TimeService } from "../../../@types/time";
 import TimeCell from "./TimeCell";
 import { styled } from "styled-components";
 
 interface Props {
   day: DayOfWeek;
-  operatingTime: OperatingTimeForm;
-  setOperatingTime: React.Dispatch<React.SetStateAction<OperatingTimeForm>>;
+  operatingTime: OperatingTime;
+  setOperatingTime: React.Dispatch<React.SetStateAction<OperatingTime>>;
   durations: Duration[];
   disabled: boolean;
+  entireError: string;
+  setEntireError: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const DayCell = ({
@@ -21,9 +20,10 @@ const DayCell = ({
   setOperatingTime,
   durations,
   disabled,
+  entireError,
+  setEntireError,
 }: Props) => {
   const addDuration = (day: DayOfWeek) => {
-    const durations = operatingTime[day];
     setOperatingTime({
       ...operatingTime,
       [day]: [...durations, new Duration()],
@@ -41,6 +41,19 @@ const DayCell = ({
     });
   };
 
+  const handleOperatingTime = (idx: number, startTime: Time, endTime: Time) => {
+    const newOperatingTime = { ...operatingTime };
+    newOperatingTime[day][idx] = {
+      startTime,
+      endTime,
+    };
+    newOperatingTime[day] = TimeService.sortOperatingTime(
+      newOperatingTime[day]
+    );
+
+    setOperatingTime(newOperatingTime);
+  };
+
   return (
     <Wrap>
       <h1>{DaytoKorean[day]}</h1>
@@ -48,11 +61,11 @@ const DayCell = ({
         <TimeCell
           key={idx}
           day={day}
-          operatingTime={operatingTime}
-          setOperatingTime={setOperatingTime}
           addFunction={!idx ? () => addDuration(day) : undefined}
           removeFunction={() => removeDuration(day, idx)}
+          handleOperatingTime={handleOperatingTime}
           idx={idx}
+          durations={durations}
           duration={duration}
           disabled={disabled}
         />

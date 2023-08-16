@@ -2,52 +2,62 @@ import { styled } from "styled-components";
 import COLOR from "../../library/_constants/colors";
 import { useEffect, useState } from "react";
 import Navbar from "../../library/components/nav/Navbar";
-import CheckAll from "../../library/components/input/CheckAll";
+import CheckAll from "../../library/components/input/check-all";
 import DayCell from "./components/DayCell";
+import { DayOfWeek, week } from "../../@types/day";
 import {
-  AllYearOperatingTimeForm,
-  DayOfWeek,
-  OperatingTimeForm,
-} from "../../@types/time";
+  AllTimeOperatingTime,
+  OperatingTime,
+} from "../../@types/operating-time";
 
 const OperatingTimePage = () => {
-  const [checkAllYearRound, setCheckAllYearRound] = useState(false);
-  const [operatingTime, setOperatingTime] = useState<OperatingTimeForm>(
-    new OperatingTimeForm()
+  const [checkAllTime, setCheckAllTime] = useState(false);
+  const [operatingTime, setOperatingTime] = useState<OperatingTime>(
+    new OperatingTime()
   );
+  const [entireError, setEntireError] = useState("");
 
   useEffect(() => {
-    if (checkAllYearRound) setOperatingTime(new AllYearOperatingTimeForm());
-    else setOperatingTime(new OperatingTimeForm());
-  }, [checkAllYearRound]);
+    if (checkAllTime) setOperatingTime(new AllTimeOperatingTime());
+    else setOperatingTime(new OperatingTime());
+  }, [checkAllTime]);
+
+  const contentStyle = {
+    border: entireError
+      ? `1px solid ${COLOR.incorrect}`
+      : `1px solid ${COLOR.border}`,
+  };
+
   return (
-    <BackGroundWrap>
+    <Wrap>
       <Navbar>운영 시간</Navbar>
       <AllYearRoundWrap>
         <CheckAll
           title="연중무휴"
-          state={checkAllYearRound}
-          setState={setCheckAllYearRound}
+          state={checkAllTime}
+          setState={setCheckAllTime}
         />
       </AllYearRoundWrap>
 
-      <ContentWrap>
-        {Object.keys(operatingTime).map((day) => (
+      <ContentWrap style={contentStyle}>
+        {week.map((day: DayOfWeek) => (
           <DayCell
-            disabled={checkAllYearRound}
             key={day}
-            day={day as DayOfWeek}
+            disabled={checkAllTime}
+            day={day}
             operatingTime={operatingTime}
             setOperatingTime={setOperatingTime}
-            durations={operatingTime[day as DayOfWeek]}
+            durations={operatingTime[day]}
+            entireError={entireError}
+            setEntireError={setEntireError}
           />
         ))}
       </ContentWrap>
-    </BackGroundWrap>
+    </Wrap>
   );
 };
 
-const BackGroundWrap = styled.section`
+const Wrap = styled.section`
   background-color: ${COLOR.background};
   min-height: 100vh;
 `;

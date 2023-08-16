@@ -5,49 +5,52 @@ import { Time } from "../../../@types/time";
 interface Props {
   time: Time;
   setTime: React.Dispatch<React.SetStateAction<Time>>;
-  idx?: string;
+  identify?: string;
   disabled: boolean;
 }
 
-const TimeInput = ({ time, setTime, idx, disabled }: Props) => {
+const TimeInput = ({ time, setTime, identify, disabled }: Props) => {
   const { hour, minute } = time;
 
-  const handleInput =
-    (type: "hour" | "minute") => (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (e.target.value === "") return setTime({ ...time, [type]: "" });
-      if (e.target.value === "00") return setTime({ ...time, [type]: "00" });
-      const timeNum = Number(e.target.value);
+  const handleHourInput = () => (e: React.ChangeEvent<HTMLInputElement>) => {
+    const inputValue = e.target.value;
+    if (inputValue === "" || inputValue === "00") {
+      return setTime({ ...time, hour: inputValue });
+    }
 
-      if (type === "hour") {
-        if (timeNum === 0) return setTime({ ...time, hour: 0 });
-        if (timeNum > 23) return setTime({ ...time, hour: 23 });
-        if (timeNum && time.minute === "") {
-          return setTime({ hour: timeNum, minute: "00" });
-        }
-        return setTime({ ...time, hour: timeNum || "" });
-      }
-      if (type === "minute") {
-        if (timeNum === 0) return setTime({ ...time, minute: 0 });
-        if (timeNum > 59) return setTime({ ...time, minute: 59 });
-        setTime({ ...time, minute: timeNum || "" });
-      }
-    };
+    const timeNum = Number(inputValue);
+
+    if (isNaN(timeNum)) return;
+    setTime({ ...time, hour: Math.min(Math.max(timeNum, 0), 23) });
+
+    if (time.minute === "") setTime({ hour: timeNum, minute: "00" });
+  };
+
+  const handleMinuteInput = () => (e: React.ChangeEvent<HTMLInputElement>) => {
+    const inputValue = e.target.value;
+    if (inputValue === "" || inputValue === "00") {
+      return setTime({ ...time, minute: inputValue });
+    }
+    const timeNum = Number(inputValue);
+    if (isNaN(timeNum)) return;
+    setTime({ ...time, minute: Math.min(Math.max(timeNum, 0), 59) });
+  };
 
   return (
     <Wrap>
       <input
         value={hour}
-        id={`${idx}-hour-input`}
-        onChange={handleInput("hour")}
+        onChange={handleHourInput()}
         placeholder="hh"
         disabled={disabled}
+        id={`${identify || ""}-hour-input`}
       />
-      <div className="divide">:</div>
+      <span>:</span>
       <input
-        disabled={disabled}
         value={minute}
-        onChange={handleInput("minute")}
+        onChange={handleMinuteInput()}
         placeholder="mm"
+        disabled={disabled}
       />
     </Wrap>
   );

@@ -1,25 +1,20 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import COLOR from "../../../library/_constants/colors";
-import {
-  DayOfWeek,
-  Duration,
-  OperatingTimeForm,
-  Time,
-} from "../../../@types/time";
+import { Duration, Time, TimeService } from "../../../@types/time";
 import TimeInput from "../../../library/components/input/time-input";
 import Icon from "../../../library/components/icon/icon";
-import { OperationTime } from "../script/time";
+import { DayOfWeek } from "../../../@types/day";
 
 interface Props {
   idx: number;
   addFunction?: () => void;
   removeFunction: () => void;
   day: DayOfWeek;
-  operatingTime: OperatingTimeForm;
+  durations: Duration[];
   duration: Duration;
-  setOperatingTime: React.Dispatch<React.SetStateAction<OperatingTimeForm>>;
   disabled: boolean;
+  handleOperatingTime: (idx: number, startTime: Time, endTime: Time) => void;
 }
 
 const TimeCell = ({
@@ -27,72 +22,55 @@ const TimeCell = ({
   addFunction,
   removeFunction,
   day,
-  operatingTime,
-  setOperatingTime,
+  durations,
   duration,
   disabled,
+  handleOperatingTime,
 }: Props) => {
   const [isFocus, setIsFocus] = useState(false);
   const [startTime, setStartTime] = useState<Time>(duration.startTime);
   const [endTime, setEndTime] = useState<Time>(duration.endTime);
   const [error, setError] = useState("");
 
-  const checkIsAllEmpty = () => {
-    if (
-      startTime.hour === "" &&
-      startTime.minute === "" &&
-      endTime.hour === "" &&
-      endTime.minute === ""
-    ) {
-      return true;
-    }
-    return false;
-  };
+  useEffect(() => {
+    setStartTime(duration.startTime);
+    setEndTime(duration.endTime);
+  }, [duration]);
+
+  const checkIsAllEmpty = () =>
+    TimeService.checkIsEmpty(startTime) && TimeService.checkIsEmpty(endTime);
 
   const handleFocus = (idx: number) => () => {
     document.getElementById(`${day + idx}-hour-input`)?.focus();
     setIsFocus(true);
   };
 
-  const handleOperatingTime = () => {
-    const newOperatingTime = { ...operatingTime };
-    newOperatingTime[day][idx] = {
-      startTime,
-      endTime,
-    };
-    newOperatingTime[day] = OperationTime.sortOperatingTime(
-      newOperatingTime[day]
-    );
-
-    setOperatingTime(newOperatingTime);
-  };
-
   useEffect(() => {
+    // 모두 빈칸일 때 에러 메시지 제거 후 종료
     if (checkIsAllEmpty()) return setError("");
 
-    if (!OperationTime.checkIsCorrectTime(startTime, endTime)) {
+    // 시작 시간이 끝 시간보다 늦을 때 에러 메시지 출력 후 종료
+    if (!TimeService.checkIsCorrectTime(startTime, endTime)) {
       return setError("올바른 시간을 입력해주세요.");
     }
 
-    if (
-      !OperationTime.checkIsOverTime(
-        operatingTime[day],
-        idx,
-        startTime,
-        endTime
-      )
-    ) {
+    // 겹치는 시간이 존재할 때 에러 메시지 출력 후 종료
+    if (!TimeService.checkIsOverTime(durations, idx, startTime, endTime)) {
       return setError("겹치는 시간이 존재합니다.");
     }
 
-    handleOperatingTime();
+    handleOperatingTime(idx, startTime, endTime);
     setError("");
   }, [startTime, endTime]);
 
-  useEffect(() => {
-    setStartTime(duration.startTime);
-    setEndTime(duration.endTime);
-  }, [duration]);
+  const inputStyle = {
+    backgroundColor: disabled ? COLOR.disabledBackground : COLOR.main,
+    border: isFocus
+      ? `1px solid ${COLOR.primary}`
+      : error
+      ? `1px solid ${COLOR.incorrect}`
+      : `1px solid ${COLOR.border}`,
+  };
 
   return (
     <Wrap>
@@ -100,21 +78,15 @@ const TimeCell = ({
         <InputWrap
           onFocus={() => setIsFocus(true)}
           onBlur={() => setIsFocus(false)}
-          className={isFocus ? "focus" : ""}
-          style={{
-            backgroundColor: disabled ? COLOR.disabledBackground : COLOR.main,
-            border: error
-              ? `1px solid ${COLOR.incorrect}`
-              : `1px solid ${COLOR.border}`,
-          }}
+          style={inputStyle}
         >
           {checkIsAllEmpty() && !isFocus && (
-            <Block onClick={handleFocus(idx)}>시간 입력</Block>
+            <InputBlock onClick={handleFocus(idx)}>시간 입력</InputBlock>
           )}
           <TimeInput
             disabled={disabled}
+            identify={day + idx}
             time={startTime}
-            idx={day + idx}
             setTime={setStartTime}
           />
           ~
@@ -122,16 +94,15 @@ const TimeCell = ({
         </InputWrap>
 
         <IconWrap>
-          <Icon
+          <Icon.Delete
             onClick={disabled ? undefined : removeFunction}
             color="disabled"
-          >
-            <Icon.Delete />
-          </Icon>
+          />
           {addFunction && (
-            <Icon onClick={disabled ? undefined : addFunction} color="disabled">
-              <Icon.Plus />
-            </Icon>
+            <Icon.Plus
+              onClick={disabled ? undefined : addFunction}
+              color="disabled"
+            />
           )}
         </IconWrap>
       </TimeCellWrap>
@@ -153,10 +124,6 @@ const InputWrap = styled.div`
   align-items: center;
   padding: 9px 3px;
   border-radius: 5px;
-  border: 1px solid ${COLOR.border};
-  &.focus {
-    border: 1px solid ${COLOR.primary};
-  }
   position: relative;
 `;
 const Message = styled.div`
@@ -170,7 +137,6 @@ const TimeCellWrap = styled.div`
   align-items: center;
   width: 270px;
   padding: 10px;
-  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
   background-color: ${COLOR.main};
 `;
 
@@ -182,7 +148,7 @@ const IconWrap = styled.div`
   width: 60px;
 `;
 
-const Block = styled.div`
+const InputBlock = styled.div`
   width: 160px;
   padding: 8px 11px;
   height: 24px;
