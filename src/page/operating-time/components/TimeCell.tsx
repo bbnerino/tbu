@@ -15,7 +15,12 @@ interface Props {
   day: DayOfWeek;
   duration: Duration;
   disabled: boolean;
-  handleOperatingTime: (day: DayOfWeek, idx: number) => void;
+  handleOperatingTime: (
+    day: DayOfWeek,
+    idx: number,
+    start: Time,
+    end: Time
+  ) => void;
   timeService: TimeServiceType;
 }
 
@@ -51,7 +56,7 @@ const TimeCell = ({
     // 모두 빈칸일 때 에러 메시지 제거 후 종료
     if (checkIsAllEmpty()) return setError("");
 
-    handleOperatingTime(day, idx);
+    handleOperatingTime(day, idx, startTime, endTime);
 
     if (!timeService.checkIsSomeEmpty(startTime, endTime)) {
       return setError("범위를 모두 입력해주세요.");

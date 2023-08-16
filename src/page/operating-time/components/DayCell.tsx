@@ -1,12 +1,17 @@
 import { DayOfWeek, DaytoKorean } from "../../../@types/day";
-import { Duration } from "../../../@types/time";
+import { Duration, Time } from "../../../@types/time";
 import { TimeServiceType } from "../../../@types/time.service";
 import TimeCell from "./TimeCell";
 import { styled } from "styled-components";
 
 interface Props {
   day: DayOfWeek;
-  handleOperatingTime: (day: DayOfWeek, idx: number) => void;
+  handleOperatingTime: (
+    day: DayOfWeek,
+    idx: number,
+    start: Time,
+    end: Time
+  ) => void;
   addDuration: (day: DayOfWeek) => void;
   removeDuration: (day: DayOfWeek, index: number) => void;
   durations: Duration[];
@@ -23,7 +28,6 @@ const DayCell = ({
   disabled,
   timeService,
 }: Props) => {
-  console.log(durations)
   return (
     <Wrap>
       <h1>{DaytoKorean[day]}</h1>

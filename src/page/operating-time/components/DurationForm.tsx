@@ -11,7 +11,7 @@ import ErrorMessage from "../../../library/components/message/error.message";
 import Icon from "../../../library/components/icon/icon";
 import { DayOfWeek, week } from "../../../@types/day";
 import DayCell from "./DayCell";
-import { Duration } from "../../../@types/time";
+import { Duration, Time } from "../../../@types/time";
 
 const DurationForm = () => {
   const [checkAllTime, setCheckAllTime] = useState(false);
@@ -45,18 +45,22 @@ const DurationForm = () => {
     };
   }, [entireError]);
 
-  const handleOperatingTime = (day: DayOfWeek, idx: number) => {
-    setOperatingTime((prev) => ({
-      ...prev,
-      [day]: operatingTime[day][idx],
-    }));
+  const handleOperatingTime = (
+    day: DayOfWeek,
+    idx: number,
+    start: Time,
+    end: Time
+  ) => {
+    const newOperatingTime = { ...operatingTime };
+    newOperatingTime[day][idx] = { startTime: start, endTime: end };
+    setOperatingTime(newOperatingTime);
   };
 
   const addDuration = useCallback(
     (day: DayOfWeek) => {
       setOperatingTime({
         ...operatingTime,
-        [day]: [operatingTime[day], new Duration()],
+        [day]: [...operatingTime[day], new Duration()],
       });
     },
     [setOperatingTime, operatingTime]
@@ -97,6 +101,7 @@ const DurationForm = () => {
           />
         ))}
       </ContentWrap>
+
       {entireError && (
         <ErrorMessage>
           <Icon.Exclam color="incorrect" /> <p>{entireError}</p>
