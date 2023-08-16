@@ -1,4 +1,3 @@
-import React from "react";
 import Icon from "../icon/icon";
 import { styled } from "styled-components";
 import COLOR from "../../_constants/colors";
@@ -12,12 +11,10 @@ interface Props {
 const CheckAll = ({ title, state, setState }: Props) => {
   return (
     <Wrap>
-      <Icon
+      <Icon.Check
         onClick={() => setState(!state)}
         color={state ? "primary" : "light"}
-      >
-        <Icon.Check />
-      </Icon>
+      />
       <p>{title}</p>
     </Wrap>
   );
