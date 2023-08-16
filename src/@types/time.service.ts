@@ -82,15 +82,40 @@ export const TimeService = ({ operatingTime, setOperatingTime }: Props) => {
       : false;
   };
 
-  const checkAllEmptyDuration = (operatingTime: OperatingTime) => {
+  const checkAllEmptyDuration = (_operatingTime: OperatingTime) => {
     for (let day of week) {
-      for (let duration of operatingTime[day]) {
+      for (let duration of _operatingTime[day]) {
         if (!checkIsEmptyDuration(duration)) {
           return false;
         }
       }
     }
     return true;
+  };
+
+  const addDuration = (day: DayOfWeek) => {
+    setOperatingTime({
+      ...operatingTime,
+      [day]: [...operatingTime[day], new Duration()],
+    });
+  };
+  const removeDuration = (day: DayOfWeek, index: number) => {
+    let newDurations = operatingTime[day].filter((dur, i) => i !== index);
+    if (newDurations.length === 0) newDurations = [new Duration()];
+    setOperatingTime({
+      ...operatingTime,
+      [day]: newDurations,
+    });
+  };
+  const handleOperatingTime = (
+    day: DayOfWeek,
+    idx: number,
+    start: Time,
+    end: Time
+  ) => {
+    const newOperatingTime = { ...operatingTime };
+    newOperatingTime[day][idx] = { startTime: start, endTime: end };
+    setOperatingTime(newOperatingTime);
   };
   return {
     checkIsEmpty,
@@ -102,6 +127,9 @@ export const TimeService = ({ operatingTime, setOperatingTime }: Props) => {
     sortOperatingTime,
     checkIsEmptyDuration,
     checkAllEmptyDuration,
+    addDuration,
+    removeDuration,
+    handleOperatingTime,
   };
 };
 
@@ -120,4 +148,12 @@ export interface TimeServiceType {
   sortOperatingTime: (durations: Duration[]) => Duration[];
   checkIsEmptyDuration: (duration: Duration) => boolean;
   checkAllEmptyDuration: (operatingTime: OperatingTime) => boolean;
+  addDuration: (day: DayOfWeek) => void;
+  removeDuration: (day: DayOfWeek, index: number) => void;
+  handleOperatingTime: (
+    day: DayOfWeek,
+    idx: number,
+    start: Time,
+    end: Time
+  ) => void;
 }

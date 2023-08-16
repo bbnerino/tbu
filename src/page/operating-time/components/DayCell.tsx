@@ -6,28 +6,12 @@ import { styled } from "styled-components";
 
 interface Props {
   day: DayOfWeek;
-  handleOperatingTime: (
-    day: DayOfWeek,
-    idx: number,
-    start: Time,
-    end: Time
-  ) => void;
-  addDuration: (day: DayOfWeek) => void;
-  removeDuration: (day: DayOfWeek, index: number) => void;
   durations: Duration[];
   disabled: boolean;
   timeService: TimeServiceType;
 }
 
-const DayCell = ({
-  day,
-  handleOperatingTime,
-  addDuration,
-  removeDuration,
-  durations,
-  disabled,
-  timeService,
-}: Props) => {
+const DayCell = ({ day, durations, disabled, timeService }: Props) => {
   return (
     <Wrap>
       <h1>{DaytoKorean[day]}</h1>
@@ -36,9 +20,6 @@ const DayCell = ({
           timeService={timeService}
           key={idx}
           day={day}
-          addFunction={!idx ? () => addDuration(day) : undefined}
-          removeFunction={() => removeDuration(day, idx)}
-          handleOperatingTime={handleOperatingTime}
           idx={idx}
           duration={duration}
           disabled={disabled}

@@ -10,30 +10,13 @@ import ErrorMessage from "../../../library/components/message/error.message";
 
 interface Props {
   idx: number;
-  addFunction?: () => void;
-  removeFunction: () => void;
   day: DayOfWeek;
   duration: Duration;
   disabled: boolean;
-  handleOperatingTime: (
-    day: DayOfWeek,
-    idx: number,
-    start: Time,
-    end: Time
-  ) => void;
   timeService: TimeServiceType;
 }
 
-const TimeCell = ({
-  idx,
-  addFunction,
-  removeFunction,
-  day,
-  duration,
-  disabled,
-  handleOperatingTime,
-  timeService,
-}: Props) => {
+const TimeCell = ({ idx, day, duration, disabled, timeService }: Props) => {
   const [isFocus, setIsFocus] = useState(false);
   const [startTime, setStartTime] = useState<Time>(duration.startTime);
   const [endTime, setEndTime] = useState<Time>(duration.endTime);
@@ -51,12 +34,11 @@ const TimeCell = ({
     document.getElementById(`${day + idx}-hour-input`)?.focus();
     setIsFocus(true);
   };
-
   useEffect(() => {
     // 모두 빈칸일 때 에러 메시지 제거 후 종료
     if (checkIsAllEmpty()) return setError("");
 
-    handleOperatingTime(day, idx, startTime, endTime);
+    timeService.handleOperatingTime(day, idx, startTime, endTime);
 
     if (!timeService.checkIsSomeEmpty(startTime, endTime)) {
       return setError("범위를 모두 입력해주세요.");
@@ -85,6 +67,7 @@ const TimeCell = ({
         : `1px solid ${COLOR.border}`,
     };
   }, [disabled, isFocus, error]);
+
   return (
     <Wrap>
       <TimeCellWrap>
@@ -108,12 +91,16 @@ const TimeCell = ({
 
         <IconWrap>
           <Icon.Delete
-            onClick={disabled ? undefined : removeFunction}
+            onClick={
+              disabled ? undefined : () => timeService.removeDuration(day, idx)
+            }
             color="disabled"
           />
-          {addFunction && (
+          {idx === 0 && (
             <Icon.Plus
-              onClick={disabled ? undefined : addFunction}
+              onClick={
+                disabled ? undefined : () => timeService.addDuration(day)
+              }
               color="disabled"
             />
           )}

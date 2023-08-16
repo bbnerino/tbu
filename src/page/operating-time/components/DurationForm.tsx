@@ -11,7 +11,6 @@ import ErrorMessage from "../../../library/components/message/error.message";
 import Icon from "../../../library/components/icon/icon";
 import { DayOfWeek, week } from "../../../@types/day";
 import DayCell from "./DayCell";
-import { Duration, Time } from "../../../@types/time";
 
 const DurationForm = () => {
   const [checkAllTime, setCheckAllTime] = useState(false);
@@ -45,39 +44,6 @@ const DurationForm = () => {
     };
   }, [entireError]);
 
-  const handleOperatingTime = (
-    day: DayOfWeek,
-    idx: number,
-    start: Time,
-    end: Time
-  ) => {
-    const newOperatingTime = { ...operatingTime };
-    newOperatingTime[day][idx] = { startTime: start, endTime: end };
-    setOperatingTime(newOperatingTime);
-  };
-
-  const addDuration = useCallback(
-    (day: DayOfWeek) => {
-      setOperatingTime({
-        ...operatingTime,
-        [day]: [...operatingTime[day], new Duration()],
-      });
-    },
-    [setOperatingTime, operatingTime]
-  );
-
-  const removeDuration = useCallback(
-    (day: DayOfWeek, index: number) => {
-      let newDurations = operatingTime[day].filter((dur, i) => i !== index);
-      if (newDurations.length === 0) newDurations = [new Duration()];
-      setOperatingTime({
-        ...operatingTime,
-        [day]: newDurations,
-      });
-    },
-    [setOperatingTime, operatingTime]
-  );
-
   return (
     <Wrap>
       <AllYearRoundWrap>
@@ -94,9 +60,6 @@ const DurationForm = () => {
             disabled={checkAllTime}
             day={day}
             timeService={timeService}
-            handleOperatingTime={handleOperatingTime}
-            addDuration={addDuration}
-            removeDuration={removeDuration}
             durations={operatingTime[day]}
           />
         ))}
