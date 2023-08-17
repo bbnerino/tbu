@@ -53,34 +53,10 @@ export const _DurationList = ({ setOperatingTime }: Props) => {
       });
     },
   };
-  const checkIsOverLapTime = (
-    durations: Duration[],
-    idx: number,
-    start: Time,
-    end: Time
-  ) => {
-    const startMinute = toMinute(start);
-    const endMinute = toMinute(end);
-
-    // 모든 시간대를 순회하며 겹치는 시간대가 있는지 확인
-    let result = durations.every((duration, index) => {
-      // 현재 시간대는 제외
-      if (index === idx) return true;
-      // 시작 <= [시작]<= 끝 OR 시작 <= [끝]<= 끝  시간에 겹치면 false
-      return !(
-        (toMinute(duration.startTime) <= startMinute &&
-          startMinute <= toMinute(duration.endTime)) ||
-        (toMinute(duration.startTime) <= endMinute &&
-          endMinute <= toMinute(duration.endTime))
-      );
-    });
-    return !result;
-  };
 
   return {
     checkAllEmptyDuration,
     operationFunction,
-    checkIsOverLapTime,
   };
 };
 export interface OperationFunction {

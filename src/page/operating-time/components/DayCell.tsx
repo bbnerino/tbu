@@ -9,28 +9,15 @@ interface Props {
   durations: Duration[];
   disabled: boolean;
   operationFunction: OperationFunction;
-  checkIsOverLapTime: (
-    durations: Duration[],
-    idx: number,
-    start: Time,
-    end: Time
-  ) => boolean;
 }
 
-const DayCell = ({
-  day,
-  durations,
-  disabled,
-  operationFunction,
-  checkIsOverLapTime,
-}: Props) => {
+const DayCell = ({ day, durations, disabled, operationFunction }: Props) => {
   // 시간대를 정렬하는 함수
 
   const { sortOperatingTime, handleOverLapTime } = _DayCell({
     day,
     durations,
     operationFunction,
-    checkIsOverLapTime,
   });
 
   return (

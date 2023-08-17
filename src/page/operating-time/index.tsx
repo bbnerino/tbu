@@ -1,5 +1,3 @@
-import { styled } from "styled-components";
-import COLOR from "../../library/_constants/colors";
 import Navbar from "../../library/components/nav/Navbar";
 import DurationList from "./components/DurationList";
 import { useState } from "react";

@@ -17,8 +17,9 @@ const DurationList = ({ checkAllTime, setEntireError }: Props) => {
   const [operatingTime, setOperatingTime] = useState<OperatingTime>(
     new OperatingTime()
   );
-  const { checkAllEmptyDuration, operationFunction, checkIsOverLapTime } =
-    _DurationList({ setOperatingTime });
+  const { checkAllEmptyDuration, operationFunction } = _DurationList({
+    setOperatingTime,
+  });
 
   useEffect(() => {
     if (checkAllTime) setOperatingTime(new AllTimeOperatingTime());
@@ -42,7 +43,6 @@ const DurationList = ({ checkAllTime, setEntireError }: Props) => {
           day={day}
           operationFunction={operationFunction}
           durations={operatingTime[day]}
-          checkIsOverLapTime={checkIsOverLapTime}
         />
       ))}
     </S.Wrap>
