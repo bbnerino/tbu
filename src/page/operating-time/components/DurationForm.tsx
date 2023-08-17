@@ -67,7 +67,8 @@ const DurationForm = () => {
 
       {entireError && (
         <ErrorMessage>
-          <Icon.Exclam color="incorrect" /> <p>{entireError}</p>
+          <Icon.Exclam color="incorrect" />{" "}
+          <p data-testid="entire-error">{entireError}</p>
         </ErrorMessage>
       )}
     </Wrap>

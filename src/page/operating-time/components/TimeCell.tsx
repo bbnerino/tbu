@@ -118,8 +118,9 @@ const TimeCell = ({ idx, day, duration, disabled, timeService }: Props) => {
           )}
         </IconWrap>
       </TimeCellWrap>
-
-      <ErrorMessage>{error}</ErrorMessage>
+      {error && (
+        <ErrorMessage dataTestId={`${day}-${idx}-error`}>{error}</ErrorMessage>
+      )}
     </Wrap>
   );
 };

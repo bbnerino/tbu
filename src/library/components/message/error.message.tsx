@@ -1,8 +1,13 @@
 import { styled } from "styled-components";
 import COLOR from "../../_constants/colors";
 
-const ErrorMessage = ({ children }: { children: any }) => {
-  return <Message>{children}</Message>;
+interface Props {
+  children: any;
+  dataTestId?: string;
+}
+
+const ErrorMessage = ({ children, dataTestId = "error-message" }: Props) => {
+  return <Message data-testid={dataTestId}>{children}</Message>;
 };
 const Message = styled.div`
   color: ${COLOR.incorrect};
