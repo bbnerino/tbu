@@ -3,6 +3,7 @@
 `npm install` -> `npm start`
 
 # 컴포넌트 구조
+<img width="1189" alt="스크린샷 2023-08-17 오후 7 10 32" src="https://github.com/bbnerino/tbu/assets/83864924/bbdd52f1-9fa7-4121-aafc-3e52064e5118">
 
 `<OperatingTimePage/>`(page/operating-time/index.tsx) 에서 페이지가 시작됩니다.
 
