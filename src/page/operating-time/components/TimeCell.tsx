@@ -69,7 +69,7 @@ const TimeCell = ({ idx, day, duration, disabled, timeService }: Props) => {
   }, [disabled, isFocus, error]);
 
   return (
-    <Wrap>
+    <Wrap data-testid="time-cell">
       <TimeCellWrap>
         <InputWrap
           onFocus={() => setIsFocus(true)}
@@ -78,7 +78,7 @@ const TimeCell = ({ idx, day, duration, disabled, timeService }: Props) => {
         >
           {checkIsAllEmpty() && !isFocus && (
             <InputBlock
-              data-testid="insert-time-input"
+              data-testid={`insert-time-input-${day}-${idx}`}
               onClick={handleFocus(idx)}
             >
               시간 입력

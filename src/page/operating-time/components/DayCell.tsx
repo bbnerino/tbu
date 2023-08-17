@@ -1,3 +1,4 @@
+import React from "react";
 import { DayOfWeek, DaytoKorean } from "../../../@types/day";
 import { Duration } from "../../../@types/time";
 import { TimeServiceType } from "../../../@types/time.service";
