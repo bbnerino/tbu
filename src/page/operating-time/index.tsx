@@ -1,20 +1,41 @@
 import { styled } from "styled-components";
 import COLOR from "../../library/_constants/colors";
 import Navbar from "../../library/components/nav/Navbar";
-import DurationForm from "./components/DurationForm";
+import DurationList from "./components/DurationList";
+import { useState } from "react";
+import CheckAll from "../../library/components/input/check-all.input";
+import ErrorMessage from "../../library/components/message/error.message";
+import Icon from "../../library/components/icon/icon";
+import * as S from "./styles/index.style";
 
 const OperatingTimePage = () => {
+  const [checkAllTime, setCheckAllTime] = useState(false);
+  const [entireError, setEntireError] = useState("");
+
   return (
-    <Wrap>
+    <S.Wrap>
       <Navbar>운영 시간</Navbar>
-      <DurationForm />
-    </Wrap>
+      <S.AllYearRound>
+        <CheckAll
+          title="연중무휴"
+          state={checkAllTime}
+          setState={setCheckAllTime}
+        />
+      </S.AllYearRound>
+
+      <DurationList
+        setEntireError={setEntireError}
+        checkAllTime={checkAllTime}
+      />
+
+      {entireError && (
+        <ErrorMessage>
+          <Icon.Exclam color="incorrect" />{" "}
+          <p data-testid="entire-error">{entireError}</p>
+        </ErrorMessage>
+      )}
+    </S.Wrap>
   );
 };
-
-const Wrap = styled.section`
-  background-color: ${COLOR.background};
-  min-height: 100vh;
-`;
 
 export default OperatingTimePage;
