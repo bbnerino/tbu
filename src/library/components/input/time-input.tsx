@@ -1,37 +1,19 @@
 import { styled } from "styled-components";
 import COLOR from "../../_constants/colors";
 import { Time } from "../../../@types/time";
+import { _timeInput } from "./_timeInput";
 
 interface Props {
   time: Time;
   setTime: React.Dispatch<React.SetStateAction<Time>>;
-  identify: string;
+  identify?: string;
   disabled: boolean;
 }
 
 const TimeInput = ({ time, setTime, identify, disabled }: Props) => {
   const { hour, minute } = time;
 
-  const setHour = (inputValue: string) => {
-    if (inputValue === "" || inputValue === "00") {
-      return setTime({ ...time, hour: inputValue });
-    }
-
-    const timeNum = Number(inputValue);
-
-    if (isNaN(timeNum)) return;
-    setTime({ ...time, hour: Math.min(Math.max(timeNum, 0), 23) });
-
-    if (time.minute === "") setTime({ hour: timeNum, minute: "00" });
-  };
-  const setMinute = (inputValue: string) => {
-    if (inputValue === "" || inputValue === "00") {
-      return setTime({ ...time, minute: inputValue });
-    }
-    const timeNum = Number(inputValue);
-    if (isNaN(timeNum)) return;
-    setTime({ ...time, minute: Math.min(Math.max(timeNum, 0), 59) });
-  };
+  const { setHour, setMinute } = _timeInput({ setTime });
 
   const handleHourInput = () => (e: React.ChangeEvent<HTMLInputElement>) => {
     setHour(e.target.value);
