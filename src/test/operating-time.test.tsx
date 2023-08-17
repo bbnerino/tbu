@@ -109,10 +109,10 @@ describe("OperatingTime Error", () => {
 
   test("시간 입력 시 순서 변경 확인", async () => {
     render(<OperatingTimePage />);
-    const $inputLabel1 = await screen.findByTestId(
-      "insert-time-input-monday-0"
-    );
-    act(() => userEvent.click($inputLabel1));
+    // const $inputLabel1 = await screen.findByTestId(
+    //   "insert-time-input-monday-0"
+    // );
+    // act(() => userEvent.click($inputLabel1));
 
     // 3~4 입력 후 1~2 입력 시 순서 변경
     const $startHourInput1 = await screen.findByTestId(
@@ -128,10 +128,10 @@ describe("OperatingTime Error", () => {
     act(() => userEvent.click($addButton));
 
     // 1~2 입력
-    const $inputLabel2 = await screen.findByTestId(
-      "insert-time-input-monday-1"
-    );
-    act(() => userEvent.click($inputLabel2));
+    // const $inputLabel2 = await screen.findByTestId(
+    //   "insert-time-input-monday-1"
+    // );
+    // act(() => userEvent.click($inputLabel2));
 
     const $startHourInput2 = await screen.findByTestId(
       "monday-1-start-hour-input"
@@ -139,7 +139,11 @@ describe("OperatingTime Error", () => {
 
     act(() => userEvent.type($startHourInput2, "1"));
 
+    const $endHourInput2 = await screen.findByTestId("monday-1-end-hour-input");
+
+    act(() => userEvent.type($endHourInput2, "2"));
     // 변경된 순서 확인
+    // eslint-disable-next-line testing-library/no-debugging-utils
     expect($startHourInput1).toHaveValue("1");
     expect($startHourInput2).toHaveValue("3");
   });

@@ -34,3 +34,9 @@ class AllTimeDuration extends Duration {
   }
 }
 // ===========================================================
+
+export interface OperationFunction {
+  handleOperatingTime: (day: DayOfWeek, durations: Duration[]) => void;
+  addOperatingTime: (day: DayOfWeek) => void;
+  removeOperatingTime: (day: DayOfWeek, idx: number) => void;
+}

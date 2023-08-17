@@ -1,48 +1,55 @@
-import React from "react";
 import { DayOfWeek, DaytoKorean } from "../../../@types/day";
-import { Duration } from "../../../@types/time";
-import { TimeServiceType } from "../../../@types/time.service";
+import { Duration, Time } from "../../../@types/time";
+import { _DayCell } from "../script/_DayCell";
+import { OperationFunction } from "../script/_DurationList";
 import TimeCell from "./TimeCell";
-import { styled } from "styled-components";
-
+import * as S from "../styles/DayCell.style";
 interface Props {
   day: DayOfWeek;
   durations: Duration[];
   disabled: boolean;
-  timeService: TimeServiceType;
+  operationFunction: OperationFunction;
+  checkIsOverLapTime: (
+    durations: Duration[],
+    idx: number,
+    start: Time,
+    end: Time
+  ) => boolean;
 }
 
-const DayCell = ({ day, durations, disabled, timeService }: Props) => {
+const DayCell = ({
+  day,
+  durations,
+  disabled,
+  operationFunction,
+  checkIsOverLapTime,
+}: Props) => {
+  // 시간대를 정렬하는 함수
+
+  const { sortOperatingTime, handleOverLapTime } = _DayCell({
+    day,
+    durations,
+    operationFunction,
+    checkIsOverLapTime,
+  });
+
   return (
-    <Wrap>
+    <S.Wrap>
       <h1>{DaytoKorean[day]}</h1>
       {durations.map((duration, idx) => (
         <TimeCell
-          timeService={timeService}
           key={idx}
           day={day}
           idx={idx}
           duration={duration}
           disabled={disabled}
+          operationFunction={operationFunction}
+          sortOperatingTime={sortOperatingTime}
+          handleOverLapTime={handleOverLapTime}
         />
       ))}
-    </Wrap>
+    </S.Wrap>
   );
 };
-const Wrap = styled.div`
-  width: 350px;
-  margin: 30px 50px;
-  min-height: 100px;
-  max-height: 350px;
-  overflow-y: auto;
-  &::-webkit-scrollbar {
-    background-color: rgb(255, 255, 255);
-    width: 10px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background-color: rgba(219, 219, 219, 0.514);
-    border-radius: 10px;
-    height: 10px;
-  }
-`;
+
 export default DayCell;

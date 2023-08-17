@@ -1,22 +1,31 @@
-import { useEffect, useMemo, useState } from "react";
-import styled from "styled-components";
-import COLOR from "../../../library/_constants/colors";
+import { useEffect, useState } from "react";
 import { Duration, Time } from "../../../@types/time";
-import TimeInput from "../../../library/components/input/time.input";
-import Icon from "../../../library/components/icon/icon";
 import { DayOfWeek } from "../../../@types/day";
-import { TimeServiceType } from "../../../@types/time.service";
 import ErrorMessage from "../../../library/components/message/error.message";
+import { OperationFunction } from "../script/_DurationList";
+import { _TimeCell } from "../script/_TimeCell";
+import InputBox from "./InputBox";
+import IconBox from "./IconBox";
+import * as S from "../styles/TimeCell.style";
 
 interface Props {
   idx: number;
   day: DayOfWeek;
   duration: Duration;
   disabled: boolean;
-  timeService: TimeServiceType;
+  operationFunction: OperationFunction;
+  sortOperatingTime: (idx: number, startTime: Time, endTime: Time) => void;
+  handleOverLapTime: (idx: number, start: Time, end: Time) => boolean;
 }
-
-const TimeCell = ({ idx, day, duration, disabled, timeService }: Props) => {
+const TimeCell = ({
+  idx,
+  day,
+  duration,
+  disabled,
+  operationFunction,
+  sortOperatingTime,
+  handleOverLapTime,
+}: Props) => {
   const [isFocus, setIsFocus] = useState(false);
   const [startTime, setStartTime] = useState<Time>(duration.startTime);
   const [endTime, setEndTime] = useState<Time>(duration.endTime);
@@ -26,152 +35,57 @@ const TimeCell = ({ idx, day, duration, disabled, timeService }: Props) => {
     setStartTime(duration.startTime);
     setEndTime(duration.endTime);
   }, [duration]);
+  const { checkIsEmpty, checkIsSomeEmpty, checkIsUnCorrectTime } = _TimeCell({
+    day,
+    idx,
+    setIsFocus,
+  });
 
-  const checkIsAllEmpty = () =>
-    timeService.checkIsEmpty(startTime) && timeService.checkIsEmpty(endTime);
-
-  const handleFocus = (idx: number) => () => {
-    document.getElementById(`${day}-${idx}-start-hour-input`)?.focus();
-    setIsFocus(true);
-  };
   useEffect(() => {
     // 모두 빈칸일 때 에러 메시지 제거 후 종료
-    if (checkIsAllEmpty()) return setError("");
+    if (checkIsEmpty(startTime) && checkIsEmpty(endTime)) return setError("");
 
-    timeService.handleOperatingTime(day, idx, startTime, endTime);
-
-    if (!timeService.checkIsSomeEmpty(startTime, endTime)) {
+    if (checkIsSomeEmpty(startTime, endTime)) {
       return setError("범위를 모두 입력해주세요.");
     }
 
-    // 시작 시간이 끝 시간보다 늦을 때 에러 메시지 출력 후 종료
-    if (!timeService.checkIsCorrectTime(startTime, endTime)) {
+    // // 시작 시간이 끝 시간보다 늦을 때 에러 메시지 출력 후 종료
+    if (checkIsUnCorrectTime(startTime, endTime)) {
       return setError("시간을 확인해주세요.");
     }
 
     // 겹치는 시간이 존재할 때 에러 메시지 출력 후 종료
-    if (!timeService.checkIsOverTime(day, idx, startTime, endTime)) {
+    if (handleOverLapTime(idx, startTime, endTime)) {
       return setError("겹치는 시간이 존재합니다.");
     }
 
+    sortOperatingTime(idx, startTime, endTime);
     setError("");
   }, [startTime, endTime]);
 
-  const inputStyle = useMemo(() => {
-    return {
-      backgroundColor: disabled ? COLOR.disabledBackground : COLOR.main,
-      border: isFocus
-        ? `1px solid ${COLOR.primary}`
-        : error
-        ? `1px solid ${COLOR.incorrect}`
-        : `1px solid ${COLOR.border}`,
-    };
-  }, [disabled, isFocus, error]);
-
+  const inputProps = {
+    disabled,
+    day,
+    idx,
+    startTime,
+    checkIsEmpty,
+    endTime,
+    setStartTime,
+    setEndTime,
+    setIsFocus,
+    isFocus,
+    error,
+  };
+  const iconProps = { idx, day, disabled, operationFunction };
   return (
-    <Wrap data-testid="time-cell">
-      <TimeCellWrap>
-        <InputWrap
-          onFocus={() => setIsFocus(true)}
-          onBlur={() => setIsFocus(false)}
-          style={inputStyle}
-        >
-          {checkIsAllEmpty() && !isFocus && (
-            <InputBlock
-              data-testid={`insert-time-input-${day}-${idx}`}
-              onClick={handleFocus(idx)}
-            >
-              시간 입력
-            </InputBlock>
-          )}
-          <TimeInput
-            disabled={disabled}
-            identify={`${day}-${idx}-start`}
-            time={startTime}
-            setTime={setStartTime}
-          />
-          ~
-          <TimeInput
-            disabled={disabled}
-            identify={`${day}-${idx}-end`}
-            time={endTime}
-            setTime={setEndTime}
-          />
-        </InputWrap>
-
-        <IconWrap>
-          <Icon.Delete
-            onClick={
-              disabled ? undefined : () => timeService.removeDuration(day, idx)
-            }
-            color="disabled"
-            data-testid={`${day}-${idx}-delete-icon`}
-          />
-          {idx === 0 && (
-            <Icon.Plus
-              onClick={
-                disabled ? undefined : () => timeService.addDuration(day)
-              }
-              color="disabled"
-              data-testid={`${day}-${idx}-plus-icon`}
-            />
-          )}
-        </IconWrap>
-      </TimeCellWrap>
-      {error && (
-        <ErrorMessage dataTestId={`${day}-${idx}-error`}>{error}</ErrorMessage>
-      )}
-    </Wrap>
+    <S.Wrap data-testid="time-cell">
+      <S.TimeCellWrap>
+        <InputBox {...inputProps} />
+        <IconBox {...iconProps} />
+      </S.TimeCellWrap>
+      <ErrorMessage dataTestId={`${day}-${idx}-error`}>{error}</ErrorMessage>
+    </S.Wrap>
   );
 };
-
-const Wrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 10px;
-  height: 90px;
-`;
-const InputWrap = styled.div`
-  width: 190px;
-  height: 25px;
-  display: flex;
-  align-items: center;
-  padding: 9px 3px;
-  border-radius: 5px;
-  position: relative;
-`;
-
-const TimeCellWrap = styled.div`
-  display: flex;
-  align-items: center;
-  width: 270px;
-  padding: 10px;
-  background-color: ${COLOR.main};
-`;
-
-const IconWrap = styled.div`
-  display: flex;
-  align-items: center;
-  margin-left: 10px;
-  justify-content: space-between;
-  width: 60px;
-`;
-
-const InputBlock = styled.div`
-  width: 160px;
-  padding: 8px 11px;
-  height: 24px;
-  border-radius: 3px;
-  position: absolute;
-  background: ${COLOR.main};
-  left: 0;
-  cursor: pointer;
-  color: ${COLOR.textLight};
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 20px;
-  display: flex;
-  align-items: center;
-`;
 
 export default TimeCell;

@@ -21,3 +21,13 @@ export class Duration {
     this.endTime = new Time();
   }
 }
+
+const toInt = (inputNum: TimeInputType) => {
+  const number = Number(inputNum);
+  if (isNaN(number)) return 0;
+  return number;
+};
+
+export const toMinute = (time: Time) => {
+  return toInt(time.hour) * 60 + toInt(time.minute);
+};

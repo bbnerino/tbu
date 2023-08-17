@@ -7,7 +7,9 @@ interface Props {
 }
 
 const ErrorMessage = ({ children, dataTestId = "error-message" }: Props) => {
-  return <Message data-testid={dataTestId}>{children}</Message>;
+  return (
+    <>{children && <Message data-testid={dataTestId}>{children}</Message>}</>
+  );
 };
 const Message = styled.div`
   color: ${COLOR.incorrect};
