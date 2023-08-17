@@ -1,5 +1,5 @@
 import { DayOfWeek, DaytoKorean } from "../../../@types/day";
-import { Duration, Time } from "../../../@types/time";
+import { Duration } from "../../../@types/time";
 import { TimeServiceType } from "../../../@types/time.service";
 import TimeCell from "./TimeCell";
 import { styled } from "styled-components";

@@ -115,6 +115,10 @@ export const TimeService = ({ operatingTime, setOperatingTime }: Props) => {
   ) => {
     const newOperatingTime = { ...operatingTime };
     newOperatingTime[day][idx] = { startTime: start, endTime: end };
+
+    // 시간대를 정렬
+    newOperatingTime[day] = sortOperatingTime(newOperatingTime[day]);
+
     setOperatingTime(newOperatingTime);
   };
   return {
