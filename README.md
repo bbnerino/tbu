@@ -1,5 +1,6 @@
-# 시작하기
 
+# 시작하기
+git 주소 : https://github.com/bbnerino/tbu
 `npm install` -> `npm start`
 
 # 컴포넌트 구조
