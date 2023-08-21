@@ -35,6 +35,7 @@ const TimeCell = ({
     setStartTime(duration.startTime);
     setEndTime(duration.endTime);
   }, [duration]);
+  
   const { checkIsEmpty, checkIsSomeEmpty, checkIsUnCorrectTime } = _TimeCell({
     day,
     idx,

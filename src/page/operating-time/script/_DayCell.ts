@@ -11,23 +11,32 @@ interface Props {
 export const _DayCell = ({ day, durations, operationFunction }: Props) => {
   const sortOperatingTime = (idx: number, startTime: Time, endTime: Time) => {
     let newDurations = [...durations];
-    newDurations[idx] = {
+    newDurations.splice(idx, 1);
+
+    const newData = {
       startTime: startTime,
       endTime: endTime,
     };
-
     // i 번째 시간대와 j 번째 시간대를 비교하여
     // i 번째 시간대가 더 늦게 시작하면 j 번째 시간대와 위치를 바꿈
     // sort 방법 : 버블 정렬 (시간복잡도 : O(n^2))
-    for (let i = 0; i < newDurations.length - 1; i++) {
-      for (let j = i + 1; j < newDurations.length; j++) {
-        if (
-          toMinute(newDurations[i].startTime) >
-          toMinute(newDurations[j].startTime)
-        )
-          newDurations.move(i, j);
+    let tmp = 0;
+    for (let i = 0; i < newDurations.length; i++) {
+      if (toMinute(newData.startTime) > toMinute(newDurations[i].startTime)) {
+        tmp = i;
+      } else {
+        break;
       }
+      // for (let j = i + 1; j < newDurations.length; j++) {
+      //   if (
+      //     toMinute(newDurations[i].startTime) >
+      //     toMinute(newDurations[j].startTime)
+      //   )
+      //     newDurations.move(i, j);
+      // }
     }
+    newDurations.push(newData);
+    newDurations.move(newDurations.length - 1, tmp);
 
     operationFunction.handleOperatingTime(day, newDurations);
   };

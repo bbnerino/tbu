@@ -20,20 +20,19 @@ const DayCell = ({ day, durations, disabled, operationFunction }: Props) => {
     operationFunction,
   });
 
+  const timeProps = {
+    day,
+    disabled,
+    operationFunction,
+    sortOperatingTime,
+    handleOverLapTime,
+  };
+
   return (
     <S.Wrap>
       <h1>{DaytoKorean[day]}</h1>
       {durations.map((duration, idx) => (
-        <TimeCell
-          key={idx}
-          day={day}
-          idx={idx}
-          duration={duration}
-          disabled={disabled}
-          operationFunction={operationFunction}
-          sortOperatingTime={sortOperatingTime}
-          handleOverLapTime={handleOverLapTime}
-        />
+        <TimeCell key={idx} idx={idx} duration={duration} {...timeProps} />
       ))}
     </S.Wrap>
   );

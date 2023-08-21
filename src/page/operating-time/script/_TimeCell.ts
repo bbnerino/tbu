@@ -1,13 +1,12 @@
 import { DayOfWeek } from "../../../@types/day";
 import { Time, toMinute } from "../../../@types/time";
-import COLOR from "../../../library/_constants/colors";
 
 interface Props {
   day: DayOfWeek;
   idx: number;
   setIsFocus: (isFocus: boolean) => void;
 }
-
+  
 export const _TimeCell = ({ day, idx, setIsFocus }: Props) => {
   const checkIsEmpty = (time: Time) => {
     return time.hour === "" && time.minute === "";
